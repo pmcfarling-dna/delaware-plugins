@@ -14,12 +14,25 @@ with an unpinned `npx -y`; don't copy that.
 
 | Tool | Pin | Node | Server name |
 |---|---|---|---|
-| Fiori MCP server, `@sap-ux/fiori-mcp-server` | 1.16.2 | 22 or later | `fiori-mcp` |
+| Fiori MCP server, `@sap-ux/fiori-mcp-server` | 1.15.24 | 22 or later | `fiori-mcp` |
 | UI5 MCP server, `@ui5/mcp-server` | 0.3.3 | 20.17 or later in the 20 line, or 22.9 or later | `ui5-mcp-server` |
 | CAP MCP server, `@cap-js/mcp-server` | 0.1.0 | not stated | `cds-mcp` |
 | CAP Skills (`cap-developer`, marketplace `capire/skills`) | commit `b6866e8` (no tags; only a `.gitattributes` file since) | n/a | n/a |
 
 Node 22.9 or later covers all of them.
+
+**Fiori stays on 1.15.24:** from 1.16.0 to 1.16.2, its `search_docs` answers
+"Search is currently unavailable. The embeddings service failed to
+initialize." (tried on 2026-11-11; 1.16.0 upgraded the embeddings library).
+Before moving the pin, run `search_docs` on the new version.
+
+**CAP's `search_docs` fails on Linux, WSL included,** at 0.1.0 and 0.0.8 alike
+(tried on 2026-11-11 with an empty npm cache): "Failed to provision embedding
+model". The install holds two copies of `onnxruntime-node` (1.31.1, and 1.30.0
+under `@huggingface/transformers`), and the second can't load beside the
+first. `search_model` is unaffected. Until SAP fixes it, read the CAP
+documentation at https://cap.cloud.sap/docs/ instead, and say so in the
+evidence. Windows and macOS were not tried.
 
 ## How you get them
 
@@ -33,7 +46,7 @@ Node 22.9 or later covers all of them.
   loading.
 - **Any other client, or without the plugin:** add each server yourself, at
   its pin, under the server name above:
-  - `claude mcp add --scope user fiori-mcp -e SAP_UX_FIORI_TOOLS_DISABLE_TELEMETRY=true -- npx -y @sap-ux/fiori-mcp-server@1.16.2 fiori-mcp`
+  - `claude mcp add --scope user fiori-mcp -e SAP_UX_FIORI_TOOLS_DISABLE_TELEMETRY=true -- npx -y @sap-ux/fiori-mcp-server@1.15.24 fiori-mcp`
   - `claude mcp add --scope user ui5-mcp-server -- npx -y @ui5/mcp-server@0.3.3`
   - `claude mcp add --scope user cds-mcp -- npx -y @cap-js/mcp-server@0.1.0`
 
