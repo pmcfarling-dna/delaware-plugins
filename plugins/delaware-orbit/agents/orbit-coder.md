@@ -61,9 +61,11 @@ who has only the spec to judge by.
 **A `ui5` or `cap` build** (the work package's `kind`): no Zenith and no ABAP tools, and
 `delaware-build` does not apply. Build with SAP's own tools as the guide's SAP tooling reference
 pins them (`delaware_guide` `dlw-orbit`, "Reference: SAP tooling"): the Fiori MCP server's app
-generator for a new Fiori elements app, the UI5 MCP server (with its linter) for UI5, the CAP MCP
-server and CAP Skills for CAP. Install the pinned versions; never an unpinned `@latest`. Read SAP
-facts from them or SAP's documentation, never from memory. **If a tool is not installed, say so in
+generator for a new Fiori elements app and its functionality tools to change its pages and
+annotations, the UI5 MCP server for UI5 (`get_guidelines` before writing code; `run_ui5_linter` and
+`run_manifest_validation` before delivering), the CAP MCP server and CAP Skills for CAP. delaware's
+plugin starts the three servers at the pins; without it, install the pinned versions, never an
+unpinned `@latest`. Read SAP facts from them or SAP's documentation, never from memory. **If a tool is not installed, say so in
 the delivery evidence; never fill the gap from memory.** Name each tool's version in the evidence.
 Opt out of the Fiori MCP server's telemetry on a customer machine unless the customer agreed. Then follow the work package's Report back:
 link the repository and commit (`orbit_link` `repository`), and deliver the checklist rows S1 to

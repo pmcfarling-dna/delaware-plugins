@@ -20,6 +20,13 @@ made here are overwritten.
   - `orbit-coder`: builds exactly what the approved work package says;
   - `orbit-code-reviewer`: checks the build on the system, read-only.
 
+- **SAP's MCP servers** for UI5, Fiori and CAP builds, started by the
+  plugin at versions delaware has checked: the Fiori MCP server (with its
+  telemetry off), the UI5 MCP server and the CAP MCP server. They need
+  Node.js 22.9 or later. For CAP builds, also install SAP's CAP Skills:
+  `claude plugin marketplace add capire/skills`, then
+  `claude plugin install cap-developer@cap`.
+
 ## What you need
 
 The **delaware MCP server**, added under the name `delaware-mcp`. The
@@ -35,7 +42,7 @@ own SAP authorisation.
 ## Install
 
 ```
-claude plugin marketplace add <this repository>
+claude plugin marketplace add pmcfarling-dna/delaware-plugins
 claude plugin install delaware-orbit@delaware-plugins
 ```
 

@@ -96,8 +96,10 @@ Then:
 - **A `ui5` or `cap` build**: review the repository at the delivered commit against the work
   package's per-kind Design, re-run its own build, tests and lint, open the deployed URL, and
   check each checklist row S1 to S6 against the coder's evidence. On a `ui5` build, re-run the UI5
-  linter through the UI5 MCP server (`run_ui5_linter`), at the version the guide's SAP tooling
-  reference pins. Record the version of every tool you ran; a tool you could not run is
+  linter and the manifest validation through the UI5 MCP server (`run_ui5_linter`,
+  `run_manifest_validation`), at the version the guide's SAP tooling reference pins, and check
+  the app style against the Design: an app the Design says is Fiori elements must not carry
+  freestyle views or controllers it didn't ask for. Record the version of every tool you ran; a tool you could not run is
   UNVERIFIABLE, never MET. A `not-applicable` S2 or S3 on
   an app with code of its own is a Major finding. Zenith does not apply; say so, never call it
   clean.

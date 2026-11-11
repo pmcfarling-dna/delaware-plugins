@@ -6,34 +6,55 @@ own tools, pinned so every developer and reviewer runs the same version.
 
 ## The pins
 
-Read on 2026-10-19 from npm and the repositories named. **Change a pin only
-on purpose:** read the new version's release notes, change it here, and say
-so in the commit. SAP's own READMEs install with an unpinned `npx -y`; don't
-copy that.
+Read on 2026-11-11 from npm, each version's release notes, and the
+repositories named; each MCP server was started at its pin and its tools
+listed. **Change a pin only on purpose:** read the new version's release
+notes, change it here, and say so in the commit. SAP's own READMEs install
+with an unpinned `npx -y`; don't copy that.
 
-| Tool | Install (Claude Code) | Pin | Node |
+| Tool | Pin | Node | Server name |
 |---|---|---|---|
-| Fiori MCP server | `claude mcp add fiori-mcp -- npx --yes @sap-ux/fiori-mcp-server@1.15.13 fiori-mcp` | 1.15.13 | 22 or later |
-| UI5 MCP server | `claude mcp add --scope user ui5-mcp-server -- npx -y @ui5/mcp-server@0.3.2` | 0.3.2 | 20.17 or later in the 20 line, or 22.9 or later |
-| CAP MCP server | `claude mcp add --scope user cds-mcp -- npx -y @cap-js/mcp-server@0.0.8` | 0.0.8 | not stated |
-| CAP Skills | `/plugin marketplace add capire/skills`, then `/plugin install cap-developer@cap` | commit `b6866e8` (no tags) | n/a |
+| Fiori MCP server, `@sap-ux/fiori-mcp-server` | 1.16.2 | 22 or later | `fiori-mcp` |
+| UI5 MCP server, `@ui5/mcp-server` | 0.3.3 | 20.17 or later in the 20 line, or 22.9 or later | `ui5-mcp-server` |
+| CAP MCP server, `@cap-js/mcp-server` | 0.1.0 | not stated | `cds-mcp` |
+| CAP Skills (`cap-developer`, marketplace `capire/skills`) | commit `b6866e8` (no tags; only a `.gitattributes` file since) | n/a | n/a |
 
-Node 22.9 or later covers all of them. Clients other than Claude Code take the
-same `npx` command in their own MCP configuration.
+Node 22.9 or later covers all of them.
 
-**The UI5 plugin** (`/plugin install ui5@claude-plugins-official`) is
-optional, for its UI5 best-practice skills. The marketplace decides its version
-(commit `a99b882`, plugin 0.1.8, on 2026-10-19), and it starts a second UI5 MCP
-server at `@latest`, unpinned. The pinned UI5 MCP server above is the one that
-counts for evidence.
+## How you get them
+
+- **Claude Code with delaware's `delaware-orbit` plugin:** the plugin starts
+  the three MCP servers at these pins, with the Fiori MCP server's telemetry
+  off. Nothing else to install. Check with `/mcp`.
+- **CAP Skills, for a `cap` build:** a separate plugin, installed once:
+  `claude plugin marketplace add capire/skills`, then
+  `claude plugin install cap-developer@cap`. It isn't a dependency of
+  `delaware-orbit`, because a missing marketplace would stop the whole plugin
+  loading.
+- **Any other client, or without the plugin:** add each server yourself, at
+  its pin, under the server name above:
+  - `claude mcp add --scope user fiori-mcp -e SAP_UX_FIORI_TOOLS_DISABLE_TELEMETRY=true -- npx -y @sap-ux/fiori-mcp-server@1.16.2 fiori-mcp`
+  - `claude mcp add --scope user ui5-mcp-server -- npx -y @ui5/mcp-server@0.3.3`
+  - `claude mcp add --scope user cds-mcp -- npx -y @cap-js/mcp-server@0.1.0`
+
+  Other clients take the same `npx` command in their own MCP configuration.
+
+**SAP's UI5 plugin** (`ui5@claude-plugins-official`) is optional, for its UI5
+best-practice skills. It starts its own UI5 MCP server, pinned by SAP (0.3.3
+on 2026-11-10, the same as ours). Ours is the one that counts for evidence.
 
 ## Which tool for what
 
 - **A new Fiori elements app:** the Fiori MCP server's app generator. Prefer it
   to the SAP Fiori tools generators in the IDE, which an agent can't drive as
   well.
-- **UI5 code, API documentation, guidelines, and the UI5 linter**
-  (`run_ui5_linter`): the UI5 MCP server.
+- **UI5 code, API documentation, guidelines, the UI5 linter**
+  (`run_ui5_linter`) **and manifest validation** (`run_manifest_validation`):
+  the UI5 MCP server. Read `get_guidelines` before writing UI5 code.
+- **Fiori elements and the Flexible Programming Model:** the Fiori MCP
+  server's `search_docs`, and its functionality tools (`list_functionality`,
+  `get_functionality_details`, `execute_functionality`) to change an app's
+  pages and annotations rather than editing them by hand.
 - **CAP:** the CAP MCP server for CAP documentation (`search_docs`) and the
   compiled CDS model (`search_model`), and CAP Skills for project setup,
   modelling and upgrades. Search the CAP documentation before you change a CDS
@@ -56,10 +77,11 @@ counts for evidence.
 - **UI5 MCP server:** it fetches UI5 resources from `https://ui5.sap.com`
   (SAPUI5) and `https://sdk.openui5.org` (OpenUI5). On a customer network that
   blocks them, set `UI5_MCP_SERVER_CDN_URL` to a mirror.
-- **CAP MCP server:** it is pre-1.0 (0.0.8), so expect changes between
-  versions. It searches the CAP documentation with embeddings computed locally.
-  Its README doesn't say whether it downloads a model on first run: not
-  verified, so check it before using it on a closed network.
+- **CAP MCP server:** it is pre-1.0 (0.1.0), so expect changes between
+  versions. It searches the CAP documentation with embeddings. Since 0.1.0 it
+  downloads its embedding model on demand into `~/.cds/models`, and falls back
+  to local embeddings if the download fails; on a closed network, expect the
+  fallback.
 
 ## When a tool is missing
 

@@ -9,7 +9,7 @@
       "name": "delaware-orbit",
       "source": "./plugins/delaware-orbit",
       "description": "delaware's method for SAP development: grounded specs, independent reviewers, ATC through Zenith, recorded sign-off.",
-      "version": "0.1.0"
+      "version": "0.2.0"
     }
   ]
 }

@@ -1,7 +1,7 @@
 ---
 name: orbit-spec-writer
 description: Use after an Orbit intake conversation, when the requester's answers are gathered and a spec must be drafted. Turns the requester's own words into an Orbit spec (the template /dlw-orbit and delaware_guide dlw-orbit define), marking every proposed default "(assumed)". Writes the draft to a file; never opens or revises a build in Orbit.
-tools: Read, Grep, Glob, Write, WebFetch, WebSearch, mcp__delaware-mcp__delaware_guide, mcp__delaware-mcp__orbit_config, mcp__delaware-mcp__orbit_list_builds, mcp__delaware-mcp__orbit_get_build, mcp__delaware-mcp__kb_search_kb, mcp__delaware-mcp__kb_get_doc, mcp__delaware-mcp__kb_list_sources, mcp__delaware-mcp__adt_sap_repository_search, mcp__delaware-mcp__adt_sap_cds_getViewInfo, mcp__delaware-mcp__adt_sap_cds_analyzeFields, mcp__delaware-mcp__adt_sap_cds_analyzeDependencies, mcp__delaware-mcp__adt_sap_table_getMetadata, mcp__delaware-mcp__adt_sap_table_search, mcp__delaware-mcp__adt_sap_odata_getMetadata, mcp__delaware-mcp__adt_sap_where_used, mcp__delaware-mcp__adt_sap_code_search, mcp__delaware-mcp__adt_sap_data_preview, mcp__delaware-mcp__adt_sap_transport_query, mcp__delaware-mcp__help_search, mcp__sap-notes__search, mcp__sap-notes__fetch
+tools: Read, Grep, Glob, Write, WebFetch, WebSearch, mcp__delaware-mcp__delaware_guide, mcp__delaware-mcp__orbit_config, mcp__delaware-mcp__orbit_list_builds, mcp__delaware-mcp__orbit_get_build, mcp__delaware-mcp__kb_search_kb, mcp__delaware-mcp__kb_get_doc, mcp__delaware-mcp__kb_list_sources, mcp__delaware-mcp__adt_sap_repository_search, mcp__delaware-mcp__adt_sap_cds_getViewInfo, mcp__delaware-mcp__adt_sap_cds_analyzeFields, mcp__delaware-mcp__adt_sap_cds_analyzeDependencies, mcp__delaware-mcp__adt_sap_table_getMetadata, mcp__delaware-mcp__adt_sap_table_search, mcp__delaware-mcp__adt_sap_odata_getMetadata, mcp__delaware-mcp__adt_sap_where_used, mcp__delaware-mcp__adt_sap_code_search, mcp__delaware-mcp__adt_sap_data_preview, mcp__delaware-mcp__adt_sap_transport_query, mcp__delaware-mcp__help_search, mcp__sap-notes__search, mcp__sap-notes__fetch, mcp__ui5-mcp-server__get_guidelines, mcp__plugin_delaware-orbit_ui5-mcp-server__get_guidelines, mcp__ui5-mcp-server__get_api_reference, mcp__plugin_delaware-orbit_ui5-mcp-server__get_api_reference, mcp__ui5-mcp-server__get_version_info, mcp__plugin_delaware-orbit_ui5-mcp-server__get_version_info, mcp__fiori-mcp__search_docs, mcp__plugin_delaware-orbit_fiori-mcp__search_docs, mcp__cds-mcp__search_docs, mcp__plugin_delaware-orbit_cds-mcp__search_docs
 model: opus
 last_reviewed: 2026-10-21
 status: current
@@ -53,6 +53,12 @@ requester has already approved.
    defaults are written for ABAP: for `ui5` and `cap`, carry their *intent* over in that
    platform's terms. Anything else (Integration Suite, say) has no kind yet: say so in Summary
    and add an Open question on how it is checked.
+   **Ground a `ui5` or `cap` Design in SAP's own tools, as you ground ABAP in the system:** the
+   floorplan, and whether Fiori elements is enough or the Flexible Programming Model or
+   freestyle is needed, from the Fiori MCP server's `search_docs` and the UI5 MCP server's
+   `get_guidelines`; a UI5 control or API from `get_api_reference`; a CAP model or service
+   decision from the CAP MCP server's `search_docs`. Cite what you read, as for `help_search`. If
+   a server isn't available, say so in Open questions; never fill the gap from memory.
    If the build replaces existing custom objects, list them (type and name, read from the
    system) in Scope, so they can be linked with `orbit_link` `replaces` once banked.
 3. **Write Usage first**, one `U` line per scenario, in the requester's words. Then derive the
