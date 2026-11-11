@@ -1,0 +1,8 @@
+{
+  "name": "delaware-orbit",
+  "version": "0.1.0",
+  "description": "delaware's method for SAP development: the /dlw-orbit and /dlw-walkthrough skills and the Orbit agents. Needs the delaware MCP server, added as delaware-mcp.",
+  "author": {
+    "name": "delaware"
+  }
+}

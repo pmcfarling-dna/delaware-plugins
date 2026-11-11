@@ -1,0 +1,15 @@
+{
+  "name": "delaware-plugins",
+  "owner": {
+    "name": "delaware"
+  },
+  "description": "delaware's Claude Code plugins for SAP development.",
+  "plugins": [
+    {
+      "name": "delaware-orbit",
+      "source": "./plugins/delaware-orbit",
+      "description": "delaware's method for SAP development: grounded specs, independent reviewers, ATC through Zenith, recorded sign-off.",
+      "version": "0.1.0"
+    }
+  ]
+}
