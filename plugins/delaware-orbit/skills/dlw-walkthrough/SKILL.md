@@ -208,6 +208,13 @@ be built as written, it asks for a spec revision instead of improvising.
 - **Who does the work:** `orbit-coder`, given the build number. It reads the
   work package and `delaware_guide` `delaware-build`, reads the KB pattern
   before each part, and builds through the `adt_sap_*` tools.
+- **The named agent, or stop.** This step runs only through `orbit-coder`.
+  If this client can't start that agent by name (it has no subagents, or
+  only a general-purpose one), stop here and say plainly that this client
+  can't run the build step of the walkthrough. The developer continues in a
+  client that can, such as Claude Code with the Orbit plugin, with
+  `/dlw-walkthrough resume <build number>`. Don't build in the main
+  conversation, and don't hand the work to a general-purpose subagent.
 - **Before it starts,** confirm with `orbit_get_build` that the build is
   theirs, and agree the scope: the whole requirement, or the slice from step 1.
 - **Run it in two phases.** A subagent can't stop and ask the developer
@@ -238,6 +245,14 @@ is a claim; this is the evidence.
 
 - **Who does the work:** `orbit-code-reviewer`, given the build number. It is
   read-only by rule.
+- **The named agent, or stop.** This step runs only through
+  `orbit-code-reviewer`. If this client can't start that agent by name (it
+  has no subagents, or only a general-purpose one), stop here and say plainly
+  that this client can't run the review step of the walkthrough. The
+  developer continues in a client that can, such as Claude Code with the
+  Orbit plugin, with `/dlw-walkthrough resume <build number>`. Don't review in
+  the main conversation, and don't hand the work to a general-purpose
+  subagent.
 - **Show:** the verdict, each A row with the reviewer's own evidence, and any
   gap. A gap goes back to step 5.
 

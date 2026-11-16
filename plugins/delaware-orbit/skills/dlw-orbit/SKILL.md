@@ -1,6 +1,6 @@
 ---
 name: dlw-orbit
-description: Take in a new piece of SAP development work (a report, interface, enhancement, form, or any development type the customer uses), draft its spec grounded in the customer's system and delaware's knowledge base, and — only after the user confirms — bank it in Orbit to get a build number. Also shows status and what is waiting on the user, revises a spec, records delivery with its transports and objects, signs off with Zenith's ATC status, and promotes the pattern to the KB. Use when someone describes new SAP development they need, asks "what am I working on", or names a build number like PTM-R-0001.
+description: Take in a new piece of SAP development work (a report, interface, enhancement, form, or any development type the customer uses), draft its spec grounded in the customer's system and delaware's knowledge base, and — only after the user confirms — bank it in Orbit to get a build number. Also shows status and what is waiting on the user, revises a spec, records delivery with its transports and objects, and signs off with Zenith's ATC status. Use when someone describes new SAP development they need, asks "what am I working on", or names a build number like PTM-R-0001.
 ---
 
 # /dlw-orbit — new SAP development intake
@@ -55,7 +55,6 @@ under its product's prefix, and each acting as the signed-in person:
 | `/dlw-orbit revise PTM-R-0001` | `orbit_get_build`, discuss the change, then `orbit_revise_spec` with `based_on` set to the version you read |
 | `/dlw-orbit deliver PTM-R-0001` | **Delivery** (below) |
 | `/dlw-orbit sign-off PTM-R-0001` | **Sign-off** (below) |
-| `/dlw-orbit promote PTM-R-0001` | **Promotion** (below) |
 
 ## Intake
 
@@ -423,24 +422,6 @@ Before calling `orbit_deliver`:
    `marksPending` shows, Zenith could not be asked; retry later with
    `orbit_mark_replaced` (the signer or a lead).
 
-## Promotion (a lead's agent)
-
-1. `orbit_promote_to_kb` with just the number returns a packet and records
-   nothing.
-2. **Write the KB entry from the packet:** the pattern, never source code,
-   customer data, transport numbers or object names. The spec's Reference
-   logic stays in Orbit; describe what it does, never copy it.
-3. **Fill in `declared_names` completely.**
-   - The packet's `declaredNames` gives you the people and the system. Add
-     the customer's name and any other names you know.
-   - The KB holds an entry whose names are not declared; an empty `customer`
-     list is only right if there truly is none.
-4. `kb_submit_for_review`, first with `mode: 'check'`, then with
-   `mode: 'submit'`.
-5. `orbit_promote_to_kb` with `entry_id` and `kb_status` (`written` or
-   `unchanged`). **Never record an entry the KB held or refused.**
-6. `kb_submission_status` shows it staged until a KB approver publishes it.
-
 ## Rules
 
 - **Never call `orbit_open_build` without explicit confirmation of the spec
@@ -453,5 +434,7 @@ Before calling `orbit_deliver`:
   checked", never "clean".
 - **Keep secrets out.** Credentials and personal data never go into specs or
   notes.
-- **The KB is for proven knowledge, not status.** Don't put in-progress work in
-  it. Promote only signed-off builds (see Promotion).
+- **The KB is a book of facts, not a history of builds.** The spec stays in
+  Orbit. Submit a fact to the KB (`kb_submit_for_review`) when you prove one
+  during the work, such as how an SAP object behaves; never a build's story,
+  status or source.
