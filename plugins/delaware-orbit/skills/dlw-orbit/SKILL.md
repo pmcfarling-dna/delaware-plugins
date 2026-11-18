@@ -300,6 +300,9 @@ Keep the spec short and specific. Don't write code in it.
     until they confirm.**
 - **Then tell them the number** (e.g. `PTM-R-0001`) and what happens next: a
   lead approves the spec, then a developer takes it.
+- **Security design review.** If your client runs subagents, have
+  `orbit-security-reviewer` do its **design review** of the spec before it is
+  approved (see Security review below), and record what it found on the build.
 
 ## Delivery (the developer's agent)
 
@@ -380,6 +383,78 @@ Before calling `orbit_deliver`:
    At `sandbox` rigour Orbit records the same problems on the delivery as
    `gate.warnings` instead of refusing. Tell the user each one.
 
+## Security review (every build, walkthrough or not)
+
+`orbit-security-reviewer` is part of the ordinary workflow, in two engagements,
+each separate from `orbit-code-reviewer`:
+
+- **Design review:** after the spec reads READY and before it is approved.
+- **Probe review:** after the coder reports done and before the first deploy,
+  and again after a fix to anything it found. It runs controlled tests in a
+  scratch copy; it never changes the repository, the deployed environment or a
+  credential.
+
+**Scale the depth to the change, and say which you chose and why:**
+- **Broad** when the change touches authorisation, roles, data visibility,
+  keys or identities, a new service, route or association, a draft lifecycle,
+  a new dependency, or a field that exposes sensitive data or changes who can
+  read or write: every read and write path, across the roles and scopes the
+  spec names, with a keep-matrix of the legitimate flows.
+- **Proportionate** for a routine field (an ordinary, non-sensitive attribute
+  on an entity under the authorisation it already has): where the field
+  appears, that the existing restrictions still cover it, that the client
+  cannot set what the server owns, and the legitimate flows of that entity.
+- **Focused** for a label, a text, a layout or an annotation with no new
+  data: the changed files, and a check that nothing else became reachable.
+- When in doubt, go up a tier. A reviewer that cannot tell says so; it does
+  not default down.
+
+**Record what it found on the build, before sign-off,** with `orbit_add_note`
+(Orbit refuses a note once the build is signed off): the engagement, the
+commit, the depth, each finding with its severity and what was decided about
+it (fixed, accepted with the reason, or left open with who owns it), and what
+it did **not** check. Save the reviewer's own report as a file named with its
+commit and scope, and cite that path in the note. The reviewer never returns a
+pass: "no findings in the areas checked" is its best result, and a time limit
+or round limit is **incomplete**, never a pass. The report it hands off is
+final; a fix to it arrives as a linked correction file (`...-correction-1`).
+If one exists, cite both the original and the correction in the note and the
+S6 evidence, and say what the correction changed.
+
+**Recording S6 (a `cap` or `ui5` build's "a security pass is done") from the
+reviewer's result.** The row's result follows the coverage and the open
+findings, never the reviewer's tone. The evidence is always the probe
+review's report path and commit, its depth, its verdict line, and the list of
+what it did not check (in full, or by the report's path when it is long).
+
+| The reviewer's result | S6 | Evidence adds |
+|---|---|---|
+| `FINDINGS` with any Critical or Major still open | `fail` | each open finding and who owns it |
+| `UNRESOLVED` (a finding still failing after two re-reviews) | `fail` | the finding and what failed each time |
+| `INCOMPLETE` (timebox, round limit or a missing tool) | `fail`, reason starts "not verified: incomplete" | what was not reached; a lead may waive it (`orbit_waive`) with a reason, which is then on the record |
+| `FINDINGS` all decided: fixed and shown closed by a probe at the delivered commit, or accepted by the requester or a lead with the reason | `pass` | each accepted finding, who accepted it and why; the commit probed must be the commit delivered |
+| `NO FINDINGS IN THE AREAS CHECKED` | `pass` only if the areas checked cover what the spec promises and the depth fits the change; otherwise `fail`, reason starts "not verified" | the unchecked list; it must hold nothing the spec's rows promise (concurrency, a second identity, access isolation) |
+
+Every dependency advisory in the production dependencies needs a disposition
+(fix, accept with the reason, defer with an owner), including one with no
+patched version; an advisory nobody assessed makes S6 `fail`. A probe run at
+an earlier commit than the one delivered does not support `pass`: re-probe the
+changed surface first.
+
+**ABAP.** An `abap` build has no S6 row (its standard rows are S1 to S4, with
+Zenith's ATC for S2), and the reviewer's ABAP probes are not yet validated, so
+only its **design review** exists. Record it in the note as "design review
+only; the code was not probed", with the reviewer's verdict line and its
+not-checked list, and say so again to the requester at sign-off. Zenith's
+answer is not a security review, and the build must not be described as
+"security reviewed" beyond the design review. If the spec has an `A` row that
+promises a security behaviour (an authority check, an access control), it is a
+`person` row or a tool row like any other and stays `not verified` until
+someone observes it.
+
+Without subagents, do this pass yourself against the same list, and record in
+the note that it was the developer's own pass, not an independent one.
+
 ## Sign-off (the requester's or lead's agent)
 
 1. `orbit_get_build`. Its `zenith` block shows each linked object as either:
@@ -409,6 +484,21 @@ Before calling `orbit_deliver`:
      confirmed them and when.
    - At `sandbox` rigour, one `statement` from the requester may confirm
      them all instead.
+   - **Who observed it counts.** For each person row, know who operated the
+     browser or client and which identity was signed in. An agent operating a
+     person's own account shows what the app did; it is not that person
+     accepting it. **Before treating an observation as the requester's
+     acceptance, read what the approved spec permits for that row** (who may
+     observe it, which identities it needs, whether a second person is
+     required); the requester's own confirmation is still theirs to give. A row
+     whose spec needs an identity nobody had (a different supervisor
+     acknowledging, an access check for another plant) is not observed: say so,
+     and do not pass it. Orbit takes `pass` or `fail` for a person row (no
+     "not verified"), so a row nobody could observe is `fail` with the reason
+     starting "not verified" and the build is reopened or a lead signs off over
+     it with `override`; it is never a quiet `pass`.
+   - Record in the delivery evidence, for any row a person did not observe
+     themselves, who operated and which identity was signed in.
    - **A `fail` means the build goes back, not into production.** Tell the
      requester which row failed, then `orbit_reopen` with what failed as the
      reason; the developer fixes it and delivers again. Orbit refuses a

@@ -73,11 +73,50 @@ S6 with what you ran and what it showed. Tests and lint may be `not-applicable` 
 only for a `ui5` app with no code of its own. A ui5 app deployed to the ABAP repository also links
 its transport and objects; Zenith does not check them.
 
+## 3b. Your assignment
+
+You are given a build number, a scope (the whole build, or named rows), the repository and
+branch for a `cap` or `ui5` build, a timebox and where evidence goes. **Build that scope and
+stop.**
+
+- **Timebox and progress.** Say the timebox at the start. Give one status line at each
+  meaningful point (a part built and tested, a design question settled, a failing test fixed)
+  and at least every 15 minutes, saying what is done, what is next and the time used. If you
+  will exceed the timebox, **stop and say so** with what remains and why; do not continue
+  silently. A timebox is the caller's decision to extend.
+- **Stop conditions.** The Design cannot be built as written, a tool the rows need is missing, a
+  decision the Design leaves open changes what you build, or a check fails twice for a reason
+  you cannot name: stop and report.
+- **Recount before you assert.** A count you report (bindings, tests, rows) is one you counted
+  in this run, from the tool's own output.
+- **Install nothing globally.** That includes tools your test runner offers to install for
+  you: if a runner wants a global install (a browser driver, say), stop and report instead of
+  accepting.
+- **Real engine for database rules.** For a `cap` build, a rule that depends on the database
+  engine (uniqueness, transaction rollback, error mapping, concurrency) is proven on the
+  engine the deployment uses, including a raw `$batch` request for any refusal that can happen
+  inside a changeset. A test on a different engine proves the rule only for that engine; say
+  which engine each test ran on. If the real engine cannot be run locally, mark the row
+  `unavailable` with why, never `pass`.
+- **Journeys first.** Write the journeys of the Usage section as runnable checks before the
+  code they exercise, or alongside it: for a draft-enabled record, creating, editing,
+  **discarding an unsaved draft**, activating and resuming. For a `ui5` app, a scripted
+  browser run of the real flows (create form fields, discard, an error shown, a required field
+  marked) before the first deploy. A journey that needs a second identity is listed as such,
+  not claimed.
+- **Fixes after a review.** Fix what the finding names, then run the legitimate-flow checks
+  again and report which. Do not widen the fix beyond the finding's cause; list what you noticed
+  but left.
+- **Do not hand-set the spec.** If you find the work package differs from the spec file you
+  were given, report the difference; do not choose one.
+
 ## 4. Output
 
 - **Build and rows**: the number, and which A and S rows you addressed.
 - **What you changed**: each object or file, with a sentence on why.
-- **Evidence per tool row**: tool, time, deciding value, verbatim.
+- **Evidence per tool row**: tool, time, deciding value, verbatim. For anything seen in a
+  browser or a client, say who or what operated it and which identity was signed in. An agent
+  using a person's own account shows what the app did; it is not that person's observation.
 - **Zenith**: the run you started, when it was captured, and what it reported.
 - **What you did NOT do**: rows not addressed, anything noticed and deliberately left alone,
   every deviation from the Design and why.

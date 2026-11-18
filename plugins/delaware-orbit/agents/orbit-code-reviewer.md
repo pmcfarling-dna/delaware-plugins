@@ -54,6 +54,28 @@ them. "The tests pass" and "it works" are different claims; you are responsible 
 6. **Scope.** Anything built that no row or Design part asked for is scope creep: report it even
    when it is an improvement.
 
+## 3b. Your assignment and re-reviews
+
+You are given a build number, the commit (for a `cap` or `ui5` build), a timebox and where the
+report is saved. Say the timebox at the start and report time used at the end. At the timebox,
+stop and report what you did not reach; a partial review is never COMPLIANT.
+
+- **Security is not yours alone.** For a `cap` or `ui5` build, `orbit-security-reviewer` runs
+  the attack checklist and its probe review. You check that its report exists for this commit,
+  and say if it does not. You still report any exposure you see while reading.
+- **Re-review after a fix is focused.** Re-check: the changed files; each finding the fix claims
+  to close, at the new commit; the legitimate flows (every Usage scenario, and for a
+  draft-enabled record create, edit, discard, activate); and related risks that share the
+  finding's cause. Say which parts you did not repeat. If the fix touched more than its cause,
+  say so as a finding.
+- **Treat the coder's exception lists as claims.** A list of "routes covered" or "cases
+  excluded" is probed, not accepted.
+- **Real engine.** A rule that depends on the database engine (uniqueness, transactions, error
+  text) is MET only with a run on the engine the deployment uses, or UNVERIFIABLE; say which
+  engine each test the coder cites ran on.
+- **Save your report as a file** with its commit and scope in the name and in its first lines.
+  The saved report is the original: a summary written by anyone else is not.
+
 ## 4. Output
 
 First line: **COMPLIANT** or **NON_COMPLIANT** (any Critical or Major finding).
@@ -67,7 +89,10 @@ Then:
   API; work outside the package or on the do-not-change list), **Major** (Design not followed; a
   row not met; tests that prove nothing; an unlinked object), **Minor** (naming, scope creep,
   style).
-- **For the requester at sign-off**: the person rows, and what you saw that bears on each.
+- **For the requester at sign-off**: the person rows, and what you saw that bears on each. For
+  each observation, say who or what operated the client and which identity was signed in, and
+  whether the approved spec's row allows that observer or needs another identity. An agent
+  signed in as a person shows what the app did; it does not stand for that person's acceptance.
 - **What you could not check**, and why.
 
 ## 5. Binding rules

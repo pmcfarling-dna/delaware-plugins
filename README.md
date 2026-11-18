@@ -18,7 +18,10 @@ made here are overwritten.
   - `orbit-spec-writer`: drafts the spec from the requester's words;
   - `orbit-spec-reviewer`: reviews it, read-only;
   - `orbit-coder`: builds exactly what the approved work package says;
-  - `orbit-code-reviewer`: checks the build on the system, read-only.
+  - `orbit-code-reviewer`: checks the build on the system, read-only;
+  - `orbit-security-reviewer`: checks what the spec and the build allow
+    that they should not, in a design review and a probe review, and never
+    returns a pass.
 
 - **SAP's MCP servers** for UI5, Fiori and CAP builds, started by the
   plugin at versions delaware has checked: the Fiori MCP server (with its

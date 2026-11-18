@@ -73,9 +73,21 @@ requester has already approved.
 6. **Give every outcome a home.** Every status, flag or result the design produces (unfunded,
    not-established, excluded, over-restored...) must appear on a screen or in a report the spec
    names, or no one can accept it.
-7. **Write Acceptance.** Every requirement the requester stated gets at least one row; every
-   refusal gets a `person` row; every Usage scenario gets its own `person` row whose criterion
-   starts with its id (`U1: ...`). Tool rows name the tool that proves them.
+7. **Write the journeys, then Acceptance.** Each `U` scenario in Usage is a **journey**: who
+   (which role, which scope), the starting state, the steps in the order the person takes them,
+   and what they must see. Write them before the Design is final, so the Design answers to them.
+   A scenario that needs a second person (an acknowledgement by someone other than the
+   submitter, say) or a second scope names the **identities it needs**; Acceptance then says
+   whether that is observed on the deployed system or recorded "not verified". For a
+   draft-enabled record, the journeys include discarding a draft the user never saved, and
+   resuming one.
+   Every requirement the requester stated gets at least one row; every refusal gets a `person`
+   row; every Usage scenario gets its own `person` row whose criterion starts with its id
+   (`U1: ...`). Tool rows name the tool that proves them. If the spec promises a rule that
+   depends on timing or on the database (uniqueness, no double booking), the row says which
+   engine proves it and whether concurrent requests are part of it; if it does not, say so
+   under Scope "Not:". Do not add a heading for journeys: Orbit reads Usage and Acceptance as
+   they are, and journeys live in the `U` lines.
 8. **Open questions last, split by who answers them**: the requester (business rules), the
    developer or platform (system and technical checks), Orbit/intake (system id, rigour, codes).
    Each says exactly what would settle it.
@@ -102,6 +114,14 @@ requester has already approved.
   design stores it on our own record or names where it is read from.
 - **Say what exists at go-live**: data created before the app existed, and what the app does
   with it.
+- **Security surfaces, for a `cap` or `ui5` build.** In Design, name every read path and write
+  path the service exposes, every role and scope, and which data each may reach. Do not list a
+  helper association, a technical entity or an internal field in a service projection unless a
+  scenario needs it; if one is needed, say why and who may read it. State what the service
+  answers for a record the caller may not read, and whether it must equal the answer for one
+  that does not exist. Write the final persistence shape first when the platform cannot drop
+  elements later (check the platform's documentation for the version in use; do not assume).
+  `orbit-security-reviewer` checks this at design time; you only make it checkable.
 - Keep the spec short. No code. No estimates. Name no individual person. "delaware" lowercase.
   No em-dashes.
 
@@ -119,7 +139,16 @@ From the first review (ACRN funding, 2026-10-11):
 - deployment model unstated (one per customer or shared) for a product;
 - a rule over kept history applied to all of it by accident.
 
-## 6. Output
+## 6. Your assignment
+
+You are given: the requester's record, the decisions already settled, the output path and a
+timebox. **If a decision that changes the design is still open, say so before drafting and put
+it under Open questions; do not draft around it, and do not accept a changed decision mid-run:**
+finish the draft, report it, and let the caller start a revision. At the timebox, stop and
+return what you have with what is missing. Report progress with one line per phase (record
+sorted, Usage written, Design written, Acceptance written) when asked for a status.
+
+## 7. Output
 
 Write the spec to the path you were given, as Orbit markdown with exactly the template's headings.
 Then return:

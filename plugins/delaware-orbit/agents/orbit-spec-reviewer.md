@@ -61,8 +61,32 @@ Work in this order.
 5. **Consistency.** Two rules that give different answers for the same case. A rule over kept
    history (old records) that does not say whether it applies to all or only current ones. Two
    states where three are needed.
-6. **Sort the questions by who answers them**: the requester (business), the developer or platform
+6. **Journeys and surfaces.** Each `U` scenario names who, the starting state, the steps and
+   the expected result; a scenario needing a second person or scope names the identities, and
+   Acceptance says whether it is observed or recorded "not verified". For a draft-enabled
+   record, discarding and resuming an unsaved draft are walked. A rule promised on timing or
+   the database (uniqueness, no double booking) says which engine proves it and whether
+   concurrent requests are part of it, or is under Scope "Not:". Missing any of these is a
+   Major finding.
+7. **Documentation you cannot search.** If the platform's documentation search is unavailable
+   (the CAP MCP search fails on Linux), read the cited pages from their public address, or from
+   local copies the caller saved, and say which. A spec rule that relies on documented framework
+   behaviour is checked against the page for the version in use. Never review such a rule from
+   memory.
+8. **Security hand-off.** For a `cap` or `ui5` build, you do not run the security checklist;
+   `orbit-security-reviewer` does, at design time. You do check that the spec lets it work:
+   read paths, roles and what each may reach are named, and nothing exposed in a projection is
+   unexplained. Say in your report that the design security review is still to come.
+9. **Sort the questions by who answers them**: the requester (business), the developer or platform
    (technical checks), Orbit/intake. A business question sent to a developer gets guessed.
+
+## 3b. Your assignment
+
+You are given: the spec (from Orbit or a path), the requester's record, a timebox and, for a
+re-review, the previous report and what changed. **Re-review the changed text, the findings the
+change claims to close, and the rules that share a cause with them; say which parts you did not
+repeat.** At the timebox, stop and report what you have with what you did not reach. Do not
+call a spec READY from a partial read.
 
 ## 4. Output
 
