@@ -36,7 +36,9 @@ the agents are installed and signed in. Don't cover setup.
    ("instead of a spec written from memory…").
 2. **Have the developer run it.** They type the command or say "go". Before
    any call that changes SAP, BTP or Orbit, say what it will change and wait
-   for their yes.
+   for their yes, unless they have already approved that operation within its
+   stated bounds (see "Decisions and the scope of a yes"): then say it in one
+   line and go ahead.
 3. **Show what came back** and point at the two or three things that show the
    method working: the citation, the refusal, the evidence. Summarise; quote
    only what matters.
@@ -54,6 +56,50 @@ meanwhile. A subagent run is given a timebox and reports progress; when it
 reaches the timebox, **stop and tell the developer** what is done and what
 remains, and let them decide whether to extend it. Never let a run overrun in
 silence, and never let a clock run out as a pass.
+
+## Decisions and the scope of a yes
+
+**Make a decision easy to answer.** When something needs the developer's
+choice, give four things, in as few words as the choice warrants: what
+happened, what it means for the business, what you recommend, and **one reply
+they can send or edit**. For example:
+
+> Some users could see journal entries they aren't authorized to see. I
+> recommend using test data only for this build. If you agree, I'll revise the
+> draft and recheck access before we save it. Reply **"yes, test data only"**,
+> or tell me what you'd change.
+
+A plain "yes" is enough when the recommendation is the only thing on the table.
+Routine progress is one line, not a prompt. **"Help me answer"** (or "what
+should I say?") works at any point: say where you are, what is being decided,
+what each choice would do, and give a reply to send.
+
+**A yes covers what the prompt named, and nothing more.** It does not authorise
+delivery, sign-off, a transport release or any other change.
+
+**Record each decision in the evidence record, not a new place:** one
+`decisions.md` in the evidence folder (what was decided, by whom, why, and
+which commit or step), listed in `INDEX.md` like any evidence file. It holds no
+verdicts; a decision that changes what a row means updates that row in
+`ACCEPTANCE.md` in the same edit. Read decisions back in one short group at a
+step boundary, not one at a time.
+
+**At check-in, ask what they will let you absorb:** "Small fixes may come up
+while building, such as a label that is too long or a redundant cast. May the
+coder fix those and just tell you? I'll still ask about anything that changes
+who can see what, which data, where it goes, or what a test row means."
+
+| What comes up | Do |
+|---|---|
+| An operation already approved (the plan from step 5, a decision in the log), inside its stated bounds: system, package, transport, repository, scope | Say it in one line and go ahead |
+| A cosmetic or mechanical fix, and they said at check-in to absorb those | The coder fixes it; one line in `decisions.md` (what, where, why); the normal syntax or build check runs; no pause and no extra review round |
+| The same fix, but the wording is itself an acceptance criterion (a label or message a row or scenario names) | Bring the choice back as a decision |
+| A material change to access, data, target or scope | Its own decision, every time, even if they agreed to absorb small fixes |
+
+**When you must stop** (a timebox, an expired session, a lock, a usage limit),
+say three things: the last state you verified, the next operation they would
+need to authorise, and where the evidence is saved. Time spent waiting on the
+environment says nothing about how the agents performed.
 
 ## Forms
 
@@ -222,11 +268,14 @@ technical user does the work.
   - Check each prerequisite the design needs (above) once the requirement is
     chosen in step 1; at check-in, confirm the sign-in to the platform works
     and name the one target (space) and repository the build uses.
-  - Create the evidence folder and the empty `ACCEPTANCE.md` and `INDEX.md`.
+- **Both branches:** create the evidence folder (said aloud first) with the
+  empty `ACCEPTANCE.md`, `INDEX.md` and `decisions.md`.
+- **Ask what they will let you absorb** (see "Decisions and the scope of a
+  yes"), and record the answer in `decisions.md`.
 
 Read back a check-in card (who Orbit and the platform say they are, the target,
-the package or repository, rigour `sandbox`, the evidence folder) and the four
-points of the method. Wait.
+the package or repository, rigour `sandbox`, the evidence folder, what they
+will let you absorb) and the four points of the method. Wait.
 
 ## Step 1: the requirement
 
@@ -242,6 +291,10 @@ Everything after this is judged against the requirement.
   something you find on the system during this step, never from memory.
 - **Size it to the workshop** (the section above): name what each promised row
   needs to be proven, and cut what the room cannot prove.
+- **Ask how the people who need it will open it,** in their words: a tile, a
+  transaction, a link, a report in a tool they already use. Ask whether they
+  have a working example of something like it today. Write the answer down and
+  give it to the spec writer, so the spec starts the journey at that door.
 - **Say where it is kept:** in delaware's Orbit on this landscape, where others
   on it can read it. Keep anything confidential out.
 - **CAP branch:** now check the prerequisites the chosen design needs.
@@ -264,7 +317,31 @@ reviewer** reads what it allows.
   `orbit-spec-reviewer` reviews it and returns the questions that must go back
   to the requester. Loop until it says READY. Then `orbit-security-reviewer`
   does its design review (`/dlw-orbit`, Security review), at the depth the spec
-  warrants; its findings are recorded on the build.
+  warrants.
+- **For an ABAP build the security reviewer does a design review only.** Its
+  ABAP probes are not yet validated, so the code is not probed. Show its report
+  as "design review only; the code was not probed", and say so again at sign-off.
+  Zenith's ATC (step 7) is the ABAP code-quality check; it is not a security
+  probe.
+- **A finding that changes access, data or scope** is shown as a decision, with
+  its reply. Before banking there is no stored build yet: "yes" authorises
+  revising the draft and re-checking the affected scope, nothing else. After
+  banking, follow `/dlw-orbit` revise (a revision after approval puts the build
+  back in `draft` and needs approving again). Either way, the reviewer's report
+  stays exactly as saved; a correction goes in its linked `-correction-N` file.
+  Record the decision in `decisions.md`, and once the build exists, on it with
+  `orbit_add_note`.
+- **Check the entry point before banking, while a change is cheap.** Once the
+  writer has proposed how it is built, find a representative example of that
+  kind of thing (an existing query, app or tile of the same kind), if there is
+  one, and open it the way the business user would: on the target release, as
+  their role. Say it plainly, not in jargon: "I'm checking that something built
+  the way yours will be can be found and opened by the people who'll use it."
+  Record: opens, does not open, or not checked. A hand-assembled address that
+  fails is not evidence either way. If it does not open, or there is no example
+  or no suitable login, say what choice that uncertainty affects ("whether we
+  promise users can find it from their launch screen") and put it under Open
+  questions or Scope "Not:" before banking. Report what you saw, not why.
 - **Settle the open decisions before the writer starts.** A subagent cannot be
   re-briefed mid-run: a decision that changes the design goes under Open
   questions, or waits for a revision round.
@@ -280,6 +357,7 @@ reviewer** reads what it allows.
   - the journeys and the Acceptance table: one `person` row per scenario, so
     one "looks good" can't pass them all, and any scenario needing a second
     identity named as such;
+  - the entry-point check and what it showed;
   - every "(assumed)".
 
 Show the whole spec. Wait.
@@ -346,8 +424,9 @@ built as written, it asks for a spec revision instead of improvising.
 - **Run it in two phases.** A subagent can't stop and ask the developer
   mid-run, so first run it read-only for a plan that lists every write (object
   or file, where). The developer approves the list; then run it again to make
-  those writes and no others. A write that times out is read back, never
-  repeated.
+  those writes and no others. The approved list is the standing approval for
+  that run: inside it, writes are announced in a line, not asked again. A write
+  that times out is read back, never repeated.
 - **Bounded runs.** Give each run a scope, a timebox and a stop condition. It
   reports progress as it goes; at the timebox it stops and says what remains.
 - **Journeys before code.** The journeys of the spec are written as runnable
@@ -381,9 +460,11 @@ attacks what the work package allows.
 
 - **Who does the work:** `orbit-code-reviewer`, and, for a CAP or UI5 build,
   `orbit-security-reviewer` in its **probe review** before the first deploy, at
-  the depth the change warrants (`/dlw-orbit`, Security review). Both are given
-  the build number, the commit and a timebox, and both save their reports as
-  files with the commit and scope in the name. Neither writes.
+  the depth the change warrants (`/dlw-orbit`, Security review). An ABAP build
+  has no probe review: its security coverage stays the design review from
+  step 2, and you say so. Each reviewer is given
+  the build number, the commit and a timebox, and saves its report as a file
+  with the commit and scope in the name. Neither writes.
 - **The named agents, or stop.** This step runs only through those agents. If
   this client can't start them by name (no subagents, or only a general-purpose
   one), stop here and say plainly that this client can't run the review step of
@@ -488,7 +569,7 @@ security reviewer, the platform's proof, a recorded sign-off or a recorded
 - **Their package or repository only.** The one they create is their own, at
   check-in.
 - **Every change said first.** Wait for a yes before any write to SAP, the
-  platform or Orbit.
+  platform or Orbit, unless it is inside an operation they already approved.
 - **One step at a time.** Never run ahead; wait for the developer.
 - **The underlying tool's rules win.** `/dlw-orbit`, `delaware-build`, the
   Zenith guide and the agents apply in full; this guide only paces them.
