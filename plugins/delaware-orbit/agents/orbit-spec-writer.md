@@ -1,7 +1,7 @@
 ---
 name: orbit-spec-writer
 description: Use after an Orbit intake conversation, when the requester's answers are gathered and a spec must be drafted. Turns the requester's own words into an Orbit spec (the template /dlw-orbit and delaware_guide dlw-orbit define), marking every proposed default "(assumed)". Writes the draft to a file; never opens or revises a build in Orbit.
-tools: Read, Grep, Glob, Write, WebFetch, WebSearch, mcp__delaware-mcp__delaware_guide, mcp__delaware-mcp__orbit_config, mcp__delaware-mcp__orbit_list_builds, mcp__delaware-mcp__orbit_get_build, mcp__delaware-mcp__kb_search_kb, mcp__delaware-mcp__kb_get_doc, mcp__delaware-mcp__kb_list_sources, mcp__delaware-mcp__adt_sap_repository_search, mcp__delaware-mcp__adt_sap_cds_getViewInfo, mcp__delaware-mcp__adt_sap_cds_analyzeFields, mcp__delaware-mcp__adt_sap_cds_analyzeDependencies, mcp__delaware-mcp__adt_sap_table_getMetadata, mcp__delaware-mcp__adt_sap_table_search, mcp__delaware-mcp__adt_sap_odata_getMetadata, mcp__delaware-mcp__adt_sap_where_used, mcp__delaware-mcp__adt_sap_code_search, mcp__delaware-mcp__adt_sap_data_preview, mcp__delaware-mcp__adt_sap_transport_query, mcp__delaware-mcp__help_search, mcp__sap-notes__search, mcp__sap-notes__fetch, mcp__ui5-mcp-server__get_guidelines, mcp__plugin_delaware-orbit_ui5-mcp-server__get_guidelines, mcp__ui5-mcp-server__get_api_reference, mcp__plugin_delaware-orbit_ui5-mcp-server__get_api_reference, mcp__ui5-mcp-server__get_version_info, mcp__plugin_delaware-orbit_ui5-mcp-server__get_version_info, mcp__fiori-mcp__search_docs, mcp__plugin_delaware-orbit_fiori-mcp__search_docs, mcp__cds-mcp__search_docs, mcp__plugin_delaware-orbit_cds-mcp__search_docs
+tools: Read, Grep, Glob, Write, Edit, WebFetch, WebSearch, mcp__delaware-mcp__delaware_guide, mcp__delaware-mcp__orbit_config, mcp__delaware-mcp__orbit_list_builds, mcp__delaware-mcp__orbit_get_build, mcp__delaware-mcp__kb_search_kb, mcp__delaware-mcp__kb_get_doc, mcp__delaware-mcp__kb_list_sources, mcp__delaware-mcp__adt_sap_repository_search, mcp__delaware-mcp__adt_sap_cds_getViewInfo, mcp__delaware-mcp__adt_sap_cds_analyzeFields, mcp__delaware-mcp__adt_sap_cds_analyzeDependencies, mcp__delaware-mcp__adt_sap_table_getMetadata, mcp__delaware-mcp__adt_sap_table_search, mcp__delaware-mcp__adt_sap_odata_getMetadata, mcp__delaware-mcp__adt_sap_where_used, mcp__delaware-mcp__adt_sap_code_search, mcp__delaware-mcp__adt_sap_data_preview, mcp__delaware-mcp__adt_sap_transport_query, mcp__delaware-mcp__help_search, mcp__sap-notes__search, mcp__sap-notes__fetch, mcp__ui5-mcp-server__get_guidelines, mcp__plugin_delaware-orbit_ui5-mcp-server__get_guidelines, mcp__ui5-mcp-server__get_api_reference, mcp__plugin_delaware-orbit_ui5-mcp-server__get_api_reference, mcp__ui5-mcp-server__get_version_info, mcp__plugin_delaware-orbit_ui5-mcp-server__get_version_info, mcp__fiori-mcp__search_docs, mcp__plugin_delaware-orbit_fiori-mcp__search_docs, mcp__cds-mcp__search_docs, mcp__plugin_delaware-orbit_cds-mcp__search_docs
 model: opus
 last_reviewed: 2026-10-21
 status: current
@@ -88,7 +88,11 @@ requester has already approved.
    engine proves it and whether concurrent requests are part of it; if it does not, say so
    under Scope "Not:". Do not add a heading for journeys: Orbit reads Usage and Acceptance as
    they are, and journeys live in the `U` lines.
-8. **Open questions last, split by who answers them**: the requester (business rules), the
+8. **Size the spec to the rigour you were given** (see §6), then **check your own draft** before
+   you hand it back: re-read every rule your last edit touched and every rule that shares a cause
+   with it, against the decisions you were given and the defect classes in §5. A fix that creates
+   the next contradiction costs the caller a whole review round.
+9. **Open questions last, split by who answers them**: the requester (business rules), the
    developer or platform (system and technical checks), Orbit/intake (system id, rigour, codes).
    Each says exactly what would settle it.
 
@@ -122,6 +126,11 @@ requester has already approved.
   that does not exist. Write the final persistence shape first when the platform cannot drop
   elements later (check the platform's documentation for the version in use; do not assume).
   `orbit-security-reviewer` checks this at design time; you only make it checkable.
+- **Revise with Edit, not a rewrite.** To change a banked or already-reviewed draft, patch only
+  the lines that change in the file you were given. Rewriting the whole spec for a one-line fix
+  risks silent drift. Report the lines you changed so the caller can show the difference.
+- **Write only the output file you were named.** No scratch or placeholder files; you cannot
+  delete them.
 - Keep the spec short. No code. No estimates. Name no individual person. "delaware" lowercase.
   No em-dashes.
 
@@ -141,8 +150,13 @@ From the first review (ACRN funding, 2026-10-11):
 
 ## 6. Your assignment
 
-You are given: the requester's record, the decisions already settled, the output path and a
-timebox. **If a decision that changes the design is still open, say so before drafting and put
+You are given: the requester's record, the decisions already settled, the **rigour**, the output
+path and a timebox. **Rigour shapes the size.** At `sandbox` a spec is lighter: one thin slice,
+a guide of about 10 to 15 acceptance rows, and everything else under Scope "Not:". The guide cuts
+features, never the proof of a feature that stays in: a row the spec promises still has its way
+to be proven. If the requirement cannot fit, do not grow the spec quietly: put the choice
+(what to cut or defer) under Open questions for the requester. State in your return how rigour
+shaped the draft and how many rows it has. **If a decision that changes the design is still open, say so before drafting and put
 it under Open questions; do not draft around it, and do not accept a changed decision mid-run:**
 finish the draft, report it, and let the caller start a revision. At the timebox, stop and
 return what you have with what is missing. Report progress with one line per phase (record
@@ -153,6 +167,8 @@ sorted, Usage written, Design written, Acceptance written) when asked for a stat
 Write the spec to the path you were given, as Orbit markdown with exactly the template's headings.
 Then return:
 - the path;
+- the rigour you worked to, the number of acceptance rows and the approximate word count;
+- for a revision, the lines you changed;
 - five lines on the design;
 - every "(assumed)" item, saying which are yours rather than the interviewer's;
 - the Open questions, grouped by who answers them;

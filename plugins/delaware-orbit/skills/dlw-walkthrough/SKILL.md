@@ -224,8 +224,10 @@ One authoritative record, so the same fact is never in two tables.
   in. An agent using a person's account shows what the app did; it is not that
   person's acceptance. For a row that needs a person, check what the approved
   spec permits (see `/dlw-orbit`, Sign-off) before treating it as met.
-- **Reviewer reports are saved as files** named with their commit and scope
-  (the reviewers write them; a summary by anyone else is not the report).
+- **Reviewer reports are saved as files** named with their commit and scope.
+  The code and security reviewers write theirs; the spec reviewer is read-only,
+  so the caller saves its report verbatim under a header naming who saved it
+  and when. A summary by anyone else is not the report.
 
 ## Step 0: check-in
 
@@ -315,7 +317,7 @@ reviewer** reads what it allows.
 - **Who does the work:** `/dlw-orbit` runs the interview, in business terms,
   proposing rather than asking. `orbit-spec-writer` drafts the spec;
   `orbit-spec-reviewer` reviews it and returns the questions that must go back
-  to the requester. Loop until it says READY. Then `orbit-security-reviewer`
+  to the requester. Then `orbit-security-reviewer`
   does its design review (`/dlw-orbit`, Security review), at the depth the spec
   warrants.
 - **For an ABAP build the security reviewer does a design review only.** Its
@@ -342,6 +344,22 @@ reviewer** reads what it allows.
   or no suitable login, say what choice that uncertainty affects ("whether we
   promise users can find it from their launch screen") and put it under Open
   questions or Scope "Not:" before banking. Report what you saw, not why.
+- **Set expectations, then keep the loop short.** Say up front: "Expect two or
+  three review rounds; each NOT READY is a guess caught before any code." The
+  first review is full; after that the reviewer only confirms (each earlier
+  finding closed or not, plus the changed text), unless a change touches access,
+  data or scope, which is reviewed more widely. **READY AFTER FIXES** means the
+  writer fixes the listed wording and you read the fixes back: no new round.
+  Loop until READY, or until the remaining fixes are closed.
+- **Give the writer the rigour and the size guide.** At `sandbox` that is one
+  thin slice and about 10 to 15 acceptance rows; what does not fit goes under
+  Scope "Not:" or comes back to the developer as a choice. Cut features, never
+  the proof of a feature that stays. Say how many rows and words the draft has.
+- **A fix is a patch, not a rewrite.** After each revision show the lines that
+  changed (a diff of the two versions), not the whole spec again.
+- **Save the spec reviewer's report yourself.** It is read-only by design, so
+  save its report verbatim, under a header naming who saved it and when. A
+  confirmation is a new file; the original verdict stays as it was.
 - **Settle the open decisions before the writer starts.** A subagent cannot be
   re-briefed mid-run: a decision that changes the design goes under Open
   questions, or waits for a revision round.
