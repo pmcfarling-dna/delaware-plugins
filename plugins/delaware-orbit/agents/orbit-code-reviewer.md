@@ -53,6 +53,13 @@ them. "The tests pass" and "it works" are different claims; you are responsible 
    requester; say which.
 6. **Scope.** Anything built that no row or Design part asked for is scope creep: report it even
    when it is an improvement.
+7. **Runtime paths a unit test cannot see.** For an ABAP RAP build, check that the coder's
+   evidence includes a smoke of the published service (create, child update, activate, each
+   action) with its raw responses; you may only read, so you check that the evidence exists and
+   matches the source. A row about authorisation or an action proved only by ABAP Unit in local
+   mode is UNVERIFIABLE. A warning the coder carried forward unresolved ("Zenith will say") is a
+   Major finding. A design choice, manual step or workaround with no recorded `kb_search_kb` is a
+   Minor finding, Major where the KB holds the answer.
 
 ## 3b. Your assignment and re-reviews
 

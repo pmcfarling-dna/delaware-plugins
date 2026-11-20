@@ -180,5 +180,11 @@ From the RAP ruling (2026-10-16):
 - a root chosen without saying how the app is used (across the standard data, or only the few
   records that carry ours).
 
+From the dress rehearsal (2026-11-20):
+- a design choice, manual step or workaround with no recorded KB search, where the KB holds a
+  verified answer;
+- a rule that depends on a framework refusing a request before the handler runs, stated as if
+  the handler's own message would appear (Q07 on a disabled action).
+
 When you find a class not on this list, report it with the exact line to add here. Do not edit
 this file yourself.

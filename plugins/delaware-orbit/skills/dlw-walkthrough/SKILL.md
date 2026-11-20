@@ -27,7 +27,8 @@ point at them.
    what, who operated the client, and what was not verified.
 
 The machine is ready: Claude Code, the delaware MCP connection, the skills and
-the agents are installed and signed in. Don't cover setup.
+the agents are installed and signed in. Don't cover setup in the room: the
+pre-flight at step 0 confirms it in two minutes.
 
 ## How every step goes
 
@@ -52,8 +53,9 @@ never work round it.
 
 **Pace for a workshop.** Say the time a step usually takes and, before a long
 one (a build, a security probe, a deploy), what the developer can read or do
-meanwhile. A subagent run is given a timebox and reports progress; when it
-reaches the timebox, **stop and tell the developer** what is done and what
+meanwhile. A subagent run is given a timebox. **A background subagent's
+progress reaches you only when it finishes**, so say so at the start and keep
+runs short; when one reaches the timebox, **stop and tell the developer** what is done and what
 remains, and let them decide whether to extend it. Never let a run overrun in
 silence, and never let a clock run out as a pass.
 
@@ -235,6 +237,24 @@ One authoritative record, so the same fact is never in two tables.
 authorisation, so everything later is recorded against a real name. No shared
 technical user does the work.
 
+- **Pre-flight, two minutes, before anything else:**
+  - `/mcp` shows `delaware-mcp` connected; if it asks to be authorised, the
+    developer does it now (a session cannot). Then one `kb_list_sources` call
+    answers.
+  - **Permission posture for SAP writes.** Say: "Claude Code can block an SAP
+    write that a helper agent makes even after you approved it here, because
+    your approval in this conversation is not the helper's own permission.
+    Either allow the specific write tools this walkthrough uses for this
+    session, which you set yourself in Claude Code's permission settings, or
+    run outside automatic mode and approve each prompt." Record the choice in
+    `decisions.md` once it exists. Never widen permissions yourself or ask for
+    a blanket allow. If a helper's write is blocked, stop, show the block as it
+    is, and let the developer decide; do not route round it.
+  - **How the result will be opened.** The people who will use it need an
+    address or a way to open it (a launchpad address, a preview). Ask for it
+    now, so the early check and the sign-off rows are not stuck later.
+  - **Say once:** don't open or reload editor windows while a phase runs; a
+    restart ends a running helper.
 - **Read first:** `delaware_guide` with name `dlw-orbit`. It is the procedure
   steps 2, 3, 4 and 8 follow.
 - **Orbit:** `orbit_config`. Show the systems, workstreams and development
@@ -410,8 +430,9 @@ request.
 - **Show the work package:** `orbit_work_package`. Point at the standard rows
   Orbit adds beside their A rows (S1 to S4 for ABAP; S1 to S6 for CAP and UI5).
   **The work package does not carry the Acceptance table's introductory text.**
-  If the spec has rules there (what "not verified" means, which environments),
-  pass them to the coder in its brief.
+  If the spec has rules there (what "not verified" means, which environments,
+  the order of checks), save them to `acceptance-preamble.md` in the evidence
+  folder, list it in `INDEX.md`, and name that file in every coder brief.
 - **Check the design against the standard rows now.** For ABAP, if the spec
   deliberately uses something unreleased, the "released APIs only" row will
   fail: prefer a released route, or plan to waive that row with `orbit_waive`,
@@ -445,8 +466,29 @@ built as written, it asks for a spec revision instead of improvising.
   those writes and no others. The approved list is the standing approval for
   that run: inside it, writes are announced in a line, not asked again. A write
   that times out is read back, never repeated.
-- **Bounded runs.** Give each run a scope, a timebox and a stop condition. It
-  reports progress as it goes; at the timebox it stops and says what remains.
+- **Bounded runs.** Give each run a scope, a timebox and a stop condition. At
+  the timebox it stops and says what remains.
+- **One phase at a time, with a fresh coder for each.** Brief each from the
+  approved plan, the build log and the latest review, not by resuming one long
+  transcript: that costs more, and the state is lost if a session dies. A phase
+  is a part that can be built, activated and checked on its own (ABAP:
+  dictionary, then the RAP stack, then service and loader; CAP: model and
+  service, then tests, then deploy). Say at the start of each phase that
+  progress arrives when it finishes, so keep phases short enough that the room
+  sees progress.
+- **Name the data, not just the date.** When a check depends on the state of
+  the test data (a day with pickups, a supply-only day, an empty day), the brief
+  names that role and which roles each case needs, so no check is briefed
+  against data that cannot exercise it.
+- **Smoke the service before trusting the tests (ABAP RAP).** Right after the
+  service is published the coder calls it (create, child update, activate, each
+  action) and keeps the raw responses; show them. A green unit run does not
+  stand in for this.
+- **After an interruption** (a restart, an expired session, a lock, a usage
+  limit): reconstruct from the system and the build log before anything is
+  retried, add a recovery entry to `decisions.md`, then give the pause report:
+  the last verified state, the next operation they would need to authorise, and
+  where the evidence is.
 - **Journeys before code.** The journeys of the spec are written as runnable
   checks before or alongside the code they exercise (for a draft-enabled record,
   including discarding an unsaved draft), and a database rule is proven on the
@@ -592,6 +634,9 @@ security reviewer, the platform's proof, a recorded sign-off or a recorded
 - **The underlying tool's rules win.** `/dlw-orbit`, `delaware-build`, the
   Zenith guide and the agents apply in full; this guide only paces them.
 - **Refusals are shown as they are,** never retried with other wording.
+- **KB first.** Before a design choice, a manual step or a workaround, the KB
+  is searched and the result said in one line, a search that found nothing
+  included.
 - **Never present a limit as a pass.** A timebox, a round limit, a missing
   tool or an unobservable row is shown as incomplete or not verified.
 - **Use only the tools the server lists.** If one named here is missing, say so

@@ -30,7 +30,9 @@ only after an explicit yes.
    installed). Its "Draft the spec" section is the template, and its rules are binding. Its
    references (the SAP traps, the app design defaults and the SAP tooling) are part of it.
 3. **delaware-kb**: the customer's standards and delaware's patterns (`kb_search_kb`, then
-   `kb_get_doc` by `source_ref`). App design names the RAP pattern entries to read. Cite what
+   `kb_get_doc` by `source_ref`). **KB first:** before a design choice, a manual step or a
+   workaround, search, and say the result in one line (the hit with its `source_ref`, or the
+   search that found nothing). App design names the RAP pattern entries to read. Cite what
    you use; treat anything not `approved` as unconfirmed.
 4. **The system**, read-only: released sources, release state (C1 for custom code), whether a
    name is free. Read SAP facts; never recall them. SAP Notes only through `sap-notes`.

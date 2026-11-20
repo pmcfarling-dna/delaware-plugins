@@ -40,7 +40,11 @@ who has only the spec to judge by.
    system), the names it proposes (free, searched with wildcards). A source that is not released
    or a name that is taken is a spec problem: stop and report.
 3. **Say what you will change before each write** (object, operation, package, transport). Then
-   write. **If a write times out, read the object back; never repeat the write.**
+   write. **If a write times out, read the object back; never repeat the write.** Keep the build
+   log (§3b) as you go.
+3a. **KB first.** Before any design choice, manual step or workaround, run `kb_search_kb` and say
+   the result in one line: the hit with its `source_ref`, or the search you ran that found
+   nothing. A choice, step or workaround with no recorded search is a gap the reviewer will name.
 4. **Our data on a standard object**: build the root the Design names, (a) or (b) of the app design
    defaults. A header table keyed by a UUID instead of the standard key is a spec problem: stop and
    report it.
@@ -84,6 +88,24 @@ stop.**
   and at least every 15 minutes, saying what is done, what is next and the time used. If you
   will exceed the timebox, **stop and say so** with what remains and why; do not continue
   silently. A timebox is the caller's decision to extend.
+- **Keep a write-ahead build log** in the evidence folder (a file you were told the name of, or
+  `build-log-<build>.md`). Before each write, add one line saying what you are about to write
+  (object, operation, system, package, transport); after it, add the result. You may be one phase
+  of several, and a session can die mid-run: the log, with the system, is how the next run knows
+  where you stopped. **When you resume or start a later phase, read the log first, then read the
+  system's current state** (the request's contents, the inactive list, the objects you expect),
+  reconcile the two, and add a recovery entry before you do anything. Never retry a write whose
+  result you do not know.
+- **Resolve or explain every warning before you report a phase done.** A compile, syntax or
+  behaviour warning is not "Zenith will say": a RAP behaviour warning can be a runtime dump.
+  Report each one with what you did about it, or why it is harmless.
+- **ABAP RAP: smoke the service itself, right after it is published and before any unit test
+  counts as evidence.** Through the published service, create a record, update a child, activate
+  and call each action, and keep the raw responses. ABAP Unit with EML runs in local mode and
+  skips some runtime checks (authorisation handlers among them), so a green unit run does not
+  prove these paths. Read the service's shape from the live `$metadata` (a GET through
+  `adt_sap_http_raw`), not from `adt_sap_odata_getMetadata`, which can return a cached shape
+  right after a change.
 - **Stop conditions.** The Design cannot be built as written, a tool the rows need is missing, a
   decision the Design leaves open changes what you build, or a check fails twice for a reason
   you cannot name: stop and report.
