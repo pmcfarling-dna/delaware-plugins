@@ -53,7 +53,10 @@ who has only the spec to judge by.
 6. **Write the tests the acceptance needs** (ABAP Unit for behaviour logic, where the platform can
    run it). A test that passes for an unrelated reason is worse than none.
 7. **Link and check**: find the transport (`adt_sap_transport_query`), `orbit_link` the transport
-   and every object you created or changed (and the package if the work package says "not set").
+   and every object you created or changed in one call (any mix of types; an older Orbit takes one
+   kind per call), and the package in its own call if the work package says "not set". Ask for
+   `detail: "receipt"` on Orbit writes and check the counts in it: it is small, where the full
+   answer grows past a client's result limit.
    Get Zenith to check them after your last change: `zenith_start_run` on the package for new
    objects, `zenith_rescan_object` for known ones; poll `zenith_run_status`; read
    `zenith_object_detail`. Fix what it reports, rescan.
@@ -129,6 +132,12 @@ stop.**
 - **Fixes after a review.** Fix what the finding names, then run the legitimate-flow checks
   again and report which. Do not widen the fix beyond the finding's cause; list what you noticed
   but left.
+- **Follow the team's delivery route** on a `cap` or `ui5` build. Before the first write to the
+  repository, search the KB for the team's delivery-route standard (`kb_search_kb`); if there is one,
+  follow it and say so in one line. If not, use the default: work on a feature branch named aloud
+  first; commit, push and open a pull request only when the human asks; never merge, approve or push
+  round a failing check; and report a failed check as it is. Say which route you used in your
+  output, and where the reviewed commit stands (on a branch, in an open pull request, or merged).
 - **Do not hand-set the spec.** If you find the work package differs from the spec file you
   were given, report the difference; do not choose one.
 

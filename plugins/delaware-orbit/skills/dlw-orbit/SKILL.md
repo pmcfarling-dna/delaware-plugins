@@ -50,9 +50,9 @@ under its product's prefix, and each acting as the signed-in person:
 | The user says | Do |
 |---|---|
 | `/dlw-orbit` or describes new work | **Intake** (below) |
-| `/dlw-orbit status PTM-R-0001` | `orbit_get_build`, then summarise: state, who has it, what's next, and Zenith's status if objects are linked |
+| `/dlw-orbit status PTM-R-0001` | `orbit_get_build` with `include` `["zenith","delivery"]` (the header, without the spec), then summarise: state, who has it, what's next, and Zenith's status if objects are linked |
 | `/dlw-orbit mine` or "what am I working on" | `orbit_my_work`, oldest first, with the one next action for each |
-| `/dlw-orbit revise PTM-R-0001` | `orbit_get_build`, discuss the change, then `orbit_revise_spec` with `based_on` set to the version you read |
+| `/dlw-orbit revise PTM-R-0001` | `orbit_get_build`, discuss the change, then `orbit_revise_spec` with `based_on` set to the version you read. For a small change send `edits` (old and new text) instead of the whole spec; give `expected_sha256` of the result |
 | `/dlw-orbit deliver PTM-R-0001` | **Delivery** (below) |
 | `/dlw-orbit sign-off PTM-R-0001` | **Sign-off** (below) |
 
@@ -311,6 +311,13 @@ checks the build on the system before you deliver. Otherwise follow this
 section yourself.
 
 **A `ui5` or `cap` build** is not gated like ABAP: no Zenith and no S1 to S4.
+**Delivery route.** Search the KB for the team's delivery-route standard before the
+first write to the repository; follow it and say so, or, if none is on file, use
+delaware's default (a feature branch; commit, push and open a pull request only
+when the human asks; never merge or push round a failing check) and say that no
+route was on file. At delivery and sign-off say where the reviewed commit
+stands: on a branch, in an open pull request, or merged.
+
 Link the repository and the commit you deliver (`orbit_link` `repository`),
 then deliver with the checklist rows S1 to S6 (it builds, tests ran, lint is
 clean, deployed and reachable, roles assigned, security pass), each with what
@@ -346,10 +353,11 @@ Before calling `orbit_deliver`:
 1. **Find what changed:** `adt_sap_transport_query` for the transport
    request, on the build's system.
 2. **Link it to the build,** because Orbit does not expand a transport:
-   - `orbit_link` with `transport`. Orbit refuses a transport whose first
-     three characters are not one of the installation's systems;
-   - `orbit_link` with `objects`, the TADIR type and name of each object in
-     it.
+   - `orbit_link` with `transport` and `objects` together, in one call: the
+     TADIR type and name of each object in it, of any mix of types. Orbit
+     refuses a transport whose first three characters are not one of the
+     installation's systems (an older Orbit takes one kind per call, so make
+     two calls there). Ask for `detail: "receipt"` and check its counts.
 3. **Get Zenith to check them:**
    - **Brand-new objects** are not in Zenith's inventory yet, so
      `zenith_rescan_object` refuses them. Call `zenith_start_run` on the

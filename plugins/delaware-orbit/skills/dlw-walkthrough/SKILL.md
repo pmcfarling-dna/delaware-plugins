@@ -383,10 +383,20 @@ reviewer** reads what it allows.
 - **Settle the open decisions before the writer starts.** A subagent cannot be
   re-briefed mid-run: a decision that changes the design goes under Open
   questions, or waits for a revision round.
+- **Keep Orbit's answers small.** Ask for `detail: "receipt"` on every write
+  whose content you do not need back (take, approve, note, link, deliver), and
+  read state with `orbit_get_build` and `include` (for example `[]` for the
+  header, `["spec"]` for the text). The receipt carries the state, counts,
+  warnings, your next action and the spec's SHA-256. An older Orbit ignores both
+  and answers in full, which is only larger. Never paste a whole build into the
+  conversation.
 - **A revision starts from Orbit's text.** Once the spec is banked, every
   revision starts from `orbit_get_build`'s current spec version, never from a
-  local draft. A revision after approval puts the build back in `draft` and
-  needs approving again; say so before starting one.
+  local draft. For a small change send `edits` (old and new text, applied by
+  Orbit to the version you name) instead of the whole spec, with
+  `expected_sha256` of the result; an older Orbit refuses `edits`, so send the
+  whole text there. A revision after approval puts the build back in `draft`
+  and needs approving again; say so before starting one.
 - **Show the method working:**
   - a data source with its release state and the read that proved it, against
     the generic answer from memory;
@@ -408,9 +418,11 @@ shown. Then the work has a number and a history from its first version.
 - **Who does the work:** `/dlw-orbit` calls `orbit_open_build`, only after an
   explicit yes. Rigour `sandbox`.
 - **Check what was stored.** Orbit takes the spec text as typed by the agent.
-  Compare the stored text with the file: hash the stored `spec.text` and the
-  file and show that they match, or show the difference. A one-word slip is
-  silent otherwise.
+  Hash the file (`sha256sum`) first and pass it as `expected_sha256`: Orbit
+  refuses a transfer slip before storing anything. Then show that the answer's
+  `spec.sha256` equals the file's hash. If the answer carries no `spec.sha256`
+  (an older Orbit), hash the stored `spec.text` and the file and compare them,
+  or show the difference. A one-word slip is silent otherwise.
 - **Show:** the build number (e.g. `RTR-R-0003`: workstream, type, sequence) and
   its state `draft`. For two builds (backend and front end), bank the backend
   first and link the front end to it with `depends_on`.
@@ -429,10 +441,12 @@ request.
 - **Take:** `orbit_take`, so the build is theirs.
 - **Show the work package:** `orbit_work_package`. Point at the standard rows
   Orbit adds beside their A rows (S1 to S4 for ABAP; S1 to S6 for CAP and UI5).
-  **The work package does not carry the Acceptance table's introductory text.**
-  If the spec has rules there (what "not verified" means, which environments,
-  the order of checks), save them to `acceptance-preamble.md` in the evidence
-  folder, list it in `INDEX.md`, and name that file in every coder brief.
+  **The work package carries the text above and below the Acceptance table**
+  (what "not verified" means, which environments, the order of checks), under
+  the line "The spec's own text on how these rows are proved". Read it out. If
+  the spec has such text and the work package lacks it (an older Orbit), save it
+  to `acceptance-preamble.md` in the evidence folder, list it in `INDEX.md`, and
+  name that file in every coder brief.
 - **Check the design against the standard rows now.** For ABAP, if the spec
   deliberately uses something unreleased, the "released APIs only" row will
   fail: prefer a released route, or plan to waive that row with `orbit_waive`,
@@ -503,9 +517,10 @@ built as written, it asks for a spec revision instead of improvising.
     a remote keyboard that cannot type `!` or `@` cannot use the `!` prefix:
     start the command for them and open the link), and every deploy and grant,
     each said first and confirmed singly.
-- **Link before review:** at the end, `orbit_link` the transport and then the
-  objects (one kind per call), or the repository and commit, so the reviewers
-  see them.
+- **Link before review:** at the end, one `orbit_link` call with the `transport`
+  and every object together (any mix of types), or the repository and commit, so
+  the reviewers see them. Ask for `detail: "receipt"` and check the counts in it.
+  The package, a dependency and a replaced object each go in a call of their own.
 - **Show:** what was built and anything it could not build as written. That
   goes back as `/dlw-orbit revise`.
 
@@ -634,6 +649,17 @@ security reviewer, the platform's proof, a recorded sign-off or a recorded
 - **The underlying tool's rules win.** `/dlw-orbit`, `delaware-build`, the
   Zenith guide and the agents apply in full; this guide only paces them.
 - **Refusals are shown as they are,** never retried with other wording.
+- **Follow the team's delivery route.** On a `cap` or `ui5` build, search the KB
+  for the team's delivery-route standard before the first write to a repository.
+  If there is one, follow it and say so in one line. If not, use delaware's
+  default (a feature branch; commit, push and open a pull request only when the
+  developer asks; never merge or push round a failing check) and say that no
+  route was on file. Say it as one line in the plan the developer already
+  approves for that phase, not as a separate question; they correct it if it is
+  wrong. Ask only if neither is available and the repository is not one they
+  created for this session. At delivery and sign-off say where the
+  reviewed commit stands: on a branch, in an open pull request, or merged.
+  Record the route used in `decisions.md`.
 - **KB first.** Before a design choice, a manual step or a workaround, the KB
   is searched and the result said in one line, a search that found nothing
   included.

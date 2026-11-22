@@ -22,8 +22,9 @@ them. "The tests pass" and "it works" are different claims; you are responsible 
 
 ## 2. Inputs
 
-1. **The work package**: `orbit_work_package` for the build, and `orbit_get_build` for what is
-   linked, what Zenith says now, waivers, and any delivery already recorded.
+1. **The work package**: `orbit_work_package` for the build, and `orbit_get_build` (with `include`
+   naming only the parts you need, `["links","delivery","zenith"]` for the usual check: the whole
+   build is very large) for what is linked, what Zenith says now, waivers, and any delivery already recorded.
 2. **The guides**: `delaware_guide` names `delaware-build` and `dlw-orbit`, with the app design
    defaults and the KB pattern entries they cite.
 3. **The system**, read-only, through delaware-mcp: object source and metadata, release state,
