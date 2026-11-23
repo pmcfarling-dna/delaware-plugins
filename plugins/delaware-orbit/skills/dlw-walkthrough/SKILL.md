@@ -193,7 +193,9 @@ Say these once at check-in; they hold for every step.
   stop.
 - **Every change said aloud first:** what it creates or changes, and where.
 - **No real personal data or credentials** in a requirement, spec, note or
-  evidence. Redact addresses as `<user>` in saved evidence.
+  evidence. Redact addresses as `<user>` in saved evidence. The spec refers to
+  the test user as "the test user (the requester's own SAP user)", never by
+  their SAP ID; say so at check-in.
 - **Durable evidence folder:** name a folder that survives a reboot (not
   `/tmp`, not a session scratchpad). See "The acceptance record".
 
@@ -227,9 +229,8 @@ One authoritative record, so the same fact is never in two tables.
   person's acceptance. For a row that needs a person, check what the approved
   spec permits (see `/dlw-orbit`, Sign-off) before treating it as met.
 - **Reviewer reports are saved as files** named with their commit and scope.
-  The code and security reviewers write theirs; the spec reviewer is read-only,
-  so the caller saves its report verbatim under a header naming who saved it
-  and when. A summary by anyone else is not the report.
+  Each reviewer writes its own, with Write; the caller names the file and gives
+  the date, and does not re-type it. A summary by anyone else is not the report.
 
 ## Step 0: check-in
 
@@ -357,7 +358,9 @@ reviewer** reads what it allows.
   writer has proposed how it is built, find a representative example of that
   kind of thing (an existing query, app or tile of the same kind), if there is
   one, and open it the way the business user would: on the target release, as
-  their role. Say it plainly, not in jargon: "I'm checking that something built
+  their role. If the KB has already measured this route on this release, offer
+  that as the default evidence and keep the real check as a sign-off row for a
+  person; have the address ready, so the room does not wait for it. Say it plainly, not in jargon: "I'm checking that something built
   the way yours will be can be found and opened by the people who'll use it."
   Record: opens, does not open, or not checked. A hand-assembled address that
   fails is not evidence either way. If it does not open, or there is no example
@@ -371,15 +374,22 @@ reviewer** reads what it allows.
   data or scope, which is reviewed more widely. **READY AFTER FIXES** means the
   writer fixes the listed wording and you read the fixes back: no new round.
   Loop until READY, or until the remaining fixes are closed.
+- **A V4 binding in a customizing client:** if the target client does not let
+  ADT publish a binding, the spec names the publish route and the test user's
+  start authorisation (search the KB first). When the KB holds a measured
+  scripted route as well as the manual one, offer both and let the developer
+  choose at intake.
 - **Give the writer the rigour and the size guide.** At `sandbox` that is one
   thin slice and about 10 to 15 acceptance rows; what does not fit goes under
   Scope "Not:" or comes back to the developer as a choice. Cut features, never
   the proof of a feature that stays. Say how many rows and words the draft has.
 - **A fix is a patch, not a rewrite.** After each revision show the lines that
   changed (a diff of the two versions), not the whole spec again.
-- **Save the spec reviewer's report yourself.** It is read-only by design, so
-  save its report verbatim, under a header naming who saved it and when. A
-  confirmation is a new file; the original verdict stays as it was.
+- **The spec reviewer saves its own report.** Name the file (with the spec
+  version in it) and give the date. It writes only that file and tells you the
+  path, the verdict line and each finding in one line; show those, and read the
+  file only for what you need. A confirmation is a new file; the original
+  verdict stays as it was. Do not re-type a report.
 - **Settle the open decisions before the writer starts.** A subagent cannot be
   re-briefed mid-run: a decision that changes the design goes under Open
   questions, or waits for a revision round.
@@ -526,6 +536,17 @@ built as written, it asks for a spec revision instead of improvising.
   The package, a dependency and a replaced object each go in a call of their own.
 - **Show:** what was built and anything it could not build as written. That
   goes back as `/dlw-orbit revise`.
+- **Open it for them.** In VS Code with SAP's ADT extension, open an ABAP object
+  in their editor with the shell, never a chat link (it renders and does
+  nothing): `code --open-url "vscode://sapse.adt-vscode/open?abapUri=<encoded abap: URI>"`,
+  then say in one line which object you opened. Only the class path pattern is
+  known; for another object type ask them to open one and read its path, as the
+  KB entry `vscode-adt-open-abap-object-from-agent` says. In Eclipse ADT, or
+  where the command is not available, name the object and its package instead.
+  A Fiori elements back end with a published OData V4 UI binding opens in a
+  generated preview from the binding editor (`fiori-elements-preview-of-an-odata-v4-service-binding`):
+  it needs no tile, but it runs as whoever is signed in, so it does not prove a
+  role.
 
 Wait.
 
@@ -612,7 +633,8 @@ waivers before delivery, the retrospective and security notes before sign-off.
   once the build is signed off.
 - **Sign off:** `/dlw-orbit sign-off`. Here the developer is also the
   requester. Go through each scenario first: they should see it work, not just
-  say yes. For each person row, say who operated the client and which identity
+  say yes. If there is no tile yet, they can try a Fiori elements back end in the
+  binding preview (step 5); say which identity opened it. For each person row, say who operated the client and which identity
   was signed in, and check what the approved spec permits. A row that needs an
   identity nobody had is not observed: it is `fail` with a reason that starts
   "not verified", and the build is reopened (or a lead signs off over it with a
