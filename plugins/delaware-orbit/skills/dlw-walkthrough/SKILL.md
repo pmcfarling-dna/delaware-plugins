@@ -267,7 +267,12 @@ technical user does the work.
   - Pick the development system from `orbit_config`'s `systems`; if more than
     one, ask. `adt_sap_connectivity_check` with that system and
     `target: "session"`. Show `logonIdentity`. If a step failed, show its `fix`
-    and stop.
+    and stop. A `location_id_not_set` warning on a connection that works is
+    expected; say so and go on.
+  - **Code search.** Call `adt_sap_code_search` with `operation: "status"`. If
+    the index is off (common on sandbox systems), say once: "code search is off
+    on this system, so I'll use where-used and the repository search"; it is not
+    an error. The writer and reviewer then list what they could not search.
   - **Prefix:** propose one from their initials (e.g. `ZJD_`) and check it is
     free with `adt_sap_repository_search`, wildcards on both sides.
   - **Package:** propose a name with their prefix (e.g. `ZJD_HACK`). If

@@ -39,6 +39,11 @@ only after an explicit yes.
 5. **SAP's documentation**, through `help_search`: `product` and `release` from the system's
    release line, exact object and API names in the query, each passage's `release` checked, its URL
    cited. If `help_search` is not offered, say so under what you could not check.
+6. **Code search may be off.** `adt_sap_code_search` needs an index that many systems do not have
+   (its error is `CodeIndexNotEnabledError`). If it answers that, say so once, use
+   `adt_sap_where_used`, `adt_sap_repository_search` and the object's `get_info`, and list
+   anything you could not search under what you could not check. An empty search is never
+   "nothing uses it" until the index is known to be on.
 
 ## 3. Method
 

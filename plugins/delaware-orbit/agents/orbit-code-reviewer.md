@@ -33,7 +33,8 @@ them. "The tests pass" and "it works" are different claims; you are responsible 
 
 ## 3. Method
 
-1. **Inventory.** Compare the objects that exist in the build's package and transport with what
+1. **Inventory.** Read the transport by its number, never by listing modifiable transports, and
+   read an object's source only for what a check needs. Compare the objects that exist in the build's package and transport with what
    is linked in Orbit and what the work package's Objects section names. Unlinked objects (Zenith
    never checks them), missing objects, and objects outside the package are findings.
 2. **Design conformance, object by object.** Read the source (`adt_sap_object_lifecycle`

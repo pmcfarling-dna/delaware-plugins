@@ -34,7 +34,9 @@ heading has text under it. A full template is not a finished spec.
 3. **Orbit's own refusals**, which the spec must survive: every required heading; an Acceptance
    table; every Usage scenario (`U1`...) with its own `person` row whose criterion starts with
    its id; a target system Orbit's config lists.
-4. **The system**, read-only, only to check that a fact the spec marks verified really is.
+4. **The system**, read-only, only to check that a fact the spec marks verified really is. A code
+   search that answers `CodeIndexNotEnabledError` is not a check: use where-used and the
+   repository search, and a claim that rests on a search you could not run stays unchecked.
 
 ## 3. Method
 

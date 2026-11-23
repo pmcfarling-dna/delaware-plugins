@@ -52,7 +52,8 @@ who has only the spec to judge by.
    UI annotations. Activate and syntax-check as you go.
 6. **Write the tests the acceptance needs** (ABAP Unit for behaviour logic, where the platform can
    run it). A test that passes for an unrelated reason is worse than none.
-7. **Link and check**: find the transport (`adt_sap_transport_query`), `orbit_link` the transport
+7. **Link and check**: find the transport (`adt_sap_transport_query`, by its number once you
+   know it: never list a user's modifiable transports, which returns every object of each), `orbit_link` the transport
    and every object you created or changed in one call (any mix of types; an older Orbit takes one
    kind per call), and the package in its own call if the work package says "not set". Ask for
    `detail: "receipt"` on Orbit writes and check the counts in it: it is small, where the full
