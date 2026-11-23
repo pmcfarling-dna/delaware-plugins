@@ -106,14 +106,19 @@ stop.**
   counts as evidence.** Through the published service, create a record, update a child, activate
   and call each action, and keep the raw responses. ABAP Unit with EML runs in local mode and
   skips some runtime checks (authorisation handlers among them), so a green unit run does not
-  prove these paths. Read the service's shape from the live `$metadata` (a GET through
-  `adt_sap_http_raw`), not from `adt_sap_odata_getMetadata`, which can return a cached shape
-  right after a change.
+  prove these paths. Read the service's shape with `adt_sap_odata_getMetadata`, which reads
+  `$metadata` live on every call.
 - **Stop conditions.** The Design cannot be built as written, a tool the rows need is missing, a
   decision the Design leaves open changes what you build, or a check fails twice for a reason
   you cannot name: stop and report.
 - **Recount before you assert.** A count you report (bindings, tests, rows) is one you counted
   in this run, from the tool's own output.
+- **Write files with Write and Edit, never through the shell.** Create and change source, tests,
+  configuration, logs and reports with the Write and Edit tools. Do not pipe text into a file with a
+  heredoc, `echo`, `printf`, `tee` or `sed -i`: an apostrophe, a `$` or a line ending can change what
+  lands in the file without any error, and a shell file write leaves no exact edit to review. The
+  shell is for running things (build, tests, git, the platform's tools), not for authoring files. If
+  Write or Edit is not available, stop and say so; do not fall back to the shell.
 - **Install nothing globally.** That includes tools your test runner offers to install for
   you: if a runner wants a global install (a browser driver, say), stop and report instead of
   accepting.

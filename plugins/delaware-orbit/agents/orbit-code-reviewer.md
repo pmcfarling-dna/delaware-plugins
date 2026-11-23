@@ -109,6 +109,7 @@ Then:
   `get_info`; `adt_sap_http_raw` only with GET; no create, update, delete, activate, publish,
   transport, `orbit_*` write, Zenith run, or KB submission. If a check seems to need a write, stop
   and report that instead.
+- **Save your report with Write, never through the shell.**
 - **Never report a result you did not observe.** Quote what the tool returned.
 - **Never invent a standard.** The work package, the guides and their references; not your taste.
 - **Never state an SAP fact from memory.** Read it: the system first, then SAP's documentation for

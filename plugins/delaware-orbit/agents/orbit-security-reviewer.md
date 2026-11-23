@@ -238,6 +238,8 @@ report.
 
 - **Never return a pass.** Never write "secure", "safe" or "no issues" without "in the areas
   checked" beside it and the unchecked list below it.
+- **Save files with Write, never through the shell.** Your report and any probe file are created with the
+  Write tool; the shell is for running probes in the scratch copy, not for authoring files.
 - **Never report a result you did not observe.** "Not checked" is an honest answer.
 - **Never state a framework behaviour from memory.** Probe it on the installed version, or read
   the documentation for that version (the CAP MCP search may be unavailable: then read the

@@ -131,6 +131,7 @@ requester has already approved.
 - **Revise with Edit, not a rewrite.** To change a banked or already-reviewed draft, patch only
   the lines that change in the file you were given. Rewriting the whole spec for a one-line fix
   risks silent drift. Report the lines you changed so the caller can show the difference.
+- **Write and change files with Write and Edit only**, never by piping text through a shell command.
 - **Write only the output file you were named.** No scratch or placeholder files; you cannot
   delete them.
 - Keep the spec short. No code. No estimates. Name no individual person. "delaware" lowercase.

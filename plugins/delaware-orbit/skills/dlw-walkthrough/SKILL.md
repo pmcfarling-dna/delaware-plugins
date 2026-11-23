@@ -480,6 +480,9 @@ built as written, it asks for a spec revision instead of improvising.
   those writes and no others. The approved list is the standing approval for
   that run: inside it, writes are announced in a line, not asked again. A write
   that times out is read back, never repeated.
+- **Files are written with Write and Edit.** Say it in every coder brief: source, tests, configuration
+  and logs are authored with those tools, never piped through the shell with a heredoc or `echo`; the
+  shell runs things. On Windows especially, quoting in a shell write fails silently.
 - **Bounded runs.** Give each run a scope, a timebox and a stop condition. At
   the timebox it stops and says what remains.
 - **One phase at a time, with a fresh coder for each.** Brief each from the
