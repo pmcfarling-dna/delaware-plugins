@@ -48,6 +48,9 @@ them. "The tests pass" and "it works" are different claims; you are responsible 
 4. **Re-run every tool row** and compare with the coder's evidence: syntax and active state, ABAP
    Unit, the service answering (a GET), Zenith's current result and its `checkedAt` against the
    last change. A discrepancy with the coder's report is Critical.
+4a. **Judge the procedure, not only the result.** The spec states each promise; how it was proven
+   was settled at build. For each tool row, say whether the coder's recorded procedure could have
+   passed without the promise being met. If it could, the row is not met.
 5. **Prove the negative where you can do it without writing.** Read the validation that should
    refuse an empty record or an unknown key, and confirm the ABAP Unit tests exercise the refusal,
    not only the happy path. A test suite that would still pass with the validation removed is a

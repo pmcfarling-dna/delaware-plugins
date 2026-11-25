@@ -261,6 +261,21 @@ criterion each, and in `check` the tool that proves it, or `person` when only
 a person can. Never write `S` rows; Orbit adds its standard ones (compiles
 and active, no ATC errors, released APIs only, ABAP Unit). When the acceptance
 depends on reference logic, a row says how to compare against it.
+
+**A row states the promise and what proves it,** not the test script: what must
+be observed, and the tool or person that observes it. Request sequences, test
+records, cleanup steps and fallbacks are worked out at build, against the real
+system; the developer records them in the evidence and the code reviewer judges
+whether they prove the row. A behaviour nobody can verify before the build is
+one technical check in a line, not a design for each way it might turn out. A
+row still says enough that it cannot pass without the promise being seen.
+
+**Offer to remove an expensive proof before designing it.** When proving a
+promise needs a test that writes real data (not a test double), or something
+this session cannot run, put it to the requester at once: take the promise out,
+row and all (Scope "Not:"), or keep it knowing what proving it takes.
+Recommend removal unless the requirement depends on it. Never engineer around
+it first.
 **Each scenario gets its own `person` row whose criterion names it** ("U1:
 …"), so one "looks good" can't pass them all; approval is refused
 (`scenario-not-accepted`) otherwise. Add `person` rows for what must be
@@ -286,9 +301,23 @@ Keep the spec short and specific. Don't write code in it.
 
 ### 4. Confirm, then bank
 - **Review it first.** If your client runs subagents, have
-  `orbit-spec-writer` draft it and `orbit-spec-reviewer` review it, and take
-  the reviewer's questions back to the requester until it says READY.
-  Otherwise do the developer's pass yourself (see How to interview).
+  `orbit-spec-writer` draft it, then `orbit-spec-reviewer` review it and
+  `orbit-security-reviewer` do its design review **at the same time**, on that
+  first draft (see Security review below). Put both sets of questions to the
+  requester together, and make one revision for both. Otherwise do the
+  developer's pass yourself (see How to interview).
+- **Three spec reviews, then the requester decides.** The first review and up
+  to two confirmations run without asking. If the third is still NOT READY,
+  start no further round: show each open finding in a line and ask, for each,
+  whether to **fix it**, **drop the promise** (Scope "Not:") or **keep it and
+  record its row as not verified**. A finding about who can read or write what,
+  or two rules that contradict each other, can only be fixed or dropped. Apply
+  the answers in one revision and have the reviewer confirm exactly those
+  findings. Show that verdict as it is, never as READY if it is not; another
+  round runs only if the requester asks for it.
+- **Copy, then edit.** Before a revision of a draft that is a file, copy the
+  last version to the new file name with the shell and give the writer that
+  copy to patch with Edit. The writer never retypes a spec into a new file.
 - **Show the whole spec** to the user. Point at the Usage scenarios, the Data
   model's root and every "(assumed)", and the rigour. Then ask plainly whether
   you should record it in Orbit.
@@ -300,9 +329,8 @@ Keep the spec short and specific. Don't write code in it.
     until they confirm.**
 - **Then tell them the number** (e.g. `PTM-R-0001`) and what happens next: a
   lead approves the spec, then a developer takes it.
-- **Security design review.** If your client runs subagents, have
-  `orbit-security-reviewer` do its **design review** of the spec before it is
-  approved (see Security review below), and record what it found on the build.
+- **Record the security design review** on the build with `orbit_add_note`
+  once it has a number (see Security review below).
 
 ## Delivery (the developer's agent)
 
@@ -396,7 +424,11 @@ Before calling `orbit_deliver`:
 `orbit-security-reviewer` is part of the ordinary workflow, in two engagements,
 each separate from `orbit-code-reviewer`:
 
-- **Design review:** after the spec reads READY and before it is approved.
+- **Design review:** on the first full draft, alongside the first spec review,
+  so a decision about access or data is made before the spec is polished. It
+  runs again, on the changed surface only, when a later revision changes who
+  can read or write what, the data, or the scope. Its report names the spec
+  version it read.
 - **Probe review:** after the coder reports done and before the first deploy,
   and again after a fix to anything it found. It runs controlled tests in a
   scratch copy; it never changes the repository, the deployed environment or a

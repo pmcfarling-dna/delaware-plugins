@@ -81,7 +81,8 @@ Work in this order.
    You do check that the spec lets it work: read paths, roles and what each may reach are named,
    and nothing exposed in a projection or an adapter is unexplained, and a field the server owns
    is read-only in the service and not only on the screen. Say in your report that the design
-   security review is still to come.
+   security review is a separate report, normally running alongside your first review; do not
+   speak for its result.
 9. **Sort the questions by who answers them**: the requester (business), the developer or platform
    (technical checks), Orbit/intake. A business question sent to a developer gets guessed.
 
@@ -96,6 +97,21 @@ closure condition; read the changed text and the rules that share a cause with i
 you did not repeat. **Broaden the re-review when the change alters data access, scope or
 behaviour**, because a change there can move a decision you already passed. A confirmation is
 short: only a finding in changed text or a finding still open can come out of it.
+
+**Judge the promise, not the test script.** A spec needs, for each row, what must be observed
+and who or what observes it. A missing request sequence, test record, cleanup step or fallback is
+**not a finding**: those are worked out at build and judged by the code reviewer. Where the spec
+carries such detail anyway, propose removing it rather than finding fault inside it. A framework
+behaviour nobody can verify before the build is a technical check, not a finding about what happens
+if it fails. It is still a blocking finding when a row could pass without the promise being seen.
+
+**Offer removal before repair.** When a finding concerns a proof that writes real data (not a test
+double) or that this session cannot run, your first closure condition is taking the promise out,
+row and all (Scope "Not:"), and it goes to the requester as a question. Keeping it is their choice.
+
+**Rounds are limited.** The caller stops after the third review and lets the requester decide each
+open finding. Raise everything you can see in the first review; a later round does not add findings
+about text that has not changed.
 
 **Rigour shapes the bar.** At `sandbox` the spec is meant to be lighter (one thin slice, about 10
 to 15 acceptance rows). Do not hold it to a delivery-rigour bar, and report a spec that has grown

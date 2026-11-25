@@ -155,6 +155,13 @@ take what it takes.
   backend. Prefer the front end the platform generates over a freestyle one.
 - **Agree one thin slice** (one usage scenario, one screen). The rest goes
   under Scope "Not:".
+- **Say what a bigger scope costs, before agreeing to it.** When the developer
+  asks for more than the size guide (one thin slice, about 10 to 15 acceptance
+  rows), say about how many rows the wider scope needs, that review and build
+  time grow with them (reviews and revisions can take hours before any code),
+  and offer a named thinner slice to build first with the rest as follow-on.
+  Then do what they choose. Say it again if the first draft comes back past the
+  guide, with its real row count, before it goes to review.
 
 **What the workshop demonstrates is not the same as what qualifies.** A build
 that showed the method may still have `not verified` rows, an unassessed
@@ -321,9 +328,11 @@ opened, and where its source lives (propose a folder).
       parent package included;
     - create a workbench transport request with `adt_sap_transport_lifecycle`,
       with `targetSystem` set to that layer's consolidation target
-      (`<system>.<client>`), read from the transport routes, or ask the
-      developer. A package create on a transport with another target can be
-      refused; the refusal names the target it wanted;
+      (`<system>.<client>`), read from the transport routes. **If the read does
+      not name it, ask the developer and wait: never assume the default target**,
+      since a wrong guess leaves an empty request behind. A package create on a
+      transport with another target can be refused; the refusal names the target
+      it wanted;
     - `adt_sap_object_lifecycle` `create` with object type `DEVC`, that
       software component and layer, `recordChanges` on, the transport, and
       `responsible` set to their SAP user from `logonIdentity`;
@@ -394,9 +403,9 @@ reviewer** reads what it allows.
 - **Who does the work:** `/dlw-orbit` runs the interview, in business terms,
   proposing rather than asking. `orbit-spec-writer` drafts the spec;
   `orbit-spec-reviewer` reviews it and returns the questions that must go back
-  to the requester. Then `orbit-security-reviewer`
-  does its design review (`/dlw-orbit`, Security review), at the depth the spec
-  warrants.
+  to the requester, while `orbit-security-reviewer` does its design review of
+  the same first draft (`/dlw-orbit`, Security review), at the depth the spec
+  warrants. Start the two together and bring their questions back as one list.
 - **For an ABAP build the security reviewer does a design review only.** Its
   ABAP probes are not yet validated, so the code is not probed. Show its report
   as "design review only; the code was not probed", and say so again at sign-off.
@@ -429,7 +438,16 @@ reviewer** reads what it allows.
   finding closed or not, plus the changed text), unless a change touches access,
   data or scope, which is reviewed more widely. **READY AFTER FIXES** means the
   writer fixes the listed wording and you read the fixes back: no new round.
-  Loop until READY, or until the remaining fixes are closed.
+  **Stop at the third review** if it is still NOT READY, and give the developer
+  the choice for each open finding (`/dlw-orbit`, "Three spec reviews, then the
+  requester decides"). Say which review this is each time ("review 2 of 3").
+- **Keep test scripts out of the spec,** and offer to drop a promise whose proof
+  writes real data or cannot be run here, before anyone designs around it
+  (`/dlw-orbit`, Acceptance).
+- **Copy, then edit.** For each new draft version, copy the last file to the new
+  name with the shell yourself (copying is not authoring), then brief the writer
+  to patch that copy with Edit. A writer that retypes the whole spec is slow and
+  drifts.
 - **A V4 binding in a customizing client:** if the target client does not let
   ADT publish a binding, the spec names the publish route and the test user's
   start authorisation (search the KB first). When the KB holds a measured

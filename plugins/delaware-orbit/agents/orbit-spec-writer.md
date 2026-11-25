@@ -135,7 +135,18 @@ requester has already approved.
   `orbit-security-reviewer` checks this at design time; you only make it checkable.
 - **Revise with Edit, not a rewrite.** To change a banked or already-reviewed draft, patch only
   the lines that change in the file you were given. Rewriting the whole spec for a one-line fix
-  risks silent drift. Report the lines you changed so the caller can show the difference.
+  risks silent drift. For a new version of a draft file the caller copies the last version to the
+  new name first; you patch that copy. If you were named a new file that does not exist, stop and
+  ask the caller to make the copy: never retype a spec into it. Report the lines you changed so
+  the caller can show the difference.
+- **No test scripts in the spec.** A row states what must be observed and which tool or person
+  observes it. Request sequences, test records, cleanup and fallbacks belong to the build, where
+  they can be tried. An unverified framework behaviour is one technical check in a line, with no
+  design for each outcome. The row still cannot pass without the promise being seen.
+- **An expensive proof is the requester's choice first.** A promise whose proof writes real data
+  (not a test double) or needs something the session cannot run goes to the requester as a
+  question, recommending that it leaves with its row (Scope "Not:") unless the requirement depends
+  on it. Do not design the proof before they answer.
 - **Write and change files with Write and Edit only**, never by piping text through a shell command.
 - **Write only the output file you were named.** No scratch or placeholder files; you cannot
   delete them.

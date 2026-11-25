@@ -50,6 +50,10 @@ who has only the spec to judge by.
    report it.
 5. **Build in the order the data flows**: tables, then views, then behaviour, then service, then
    UI annotations. Activate and syntax-check as you go.
+5a. **Work out how each tool row is proven.** The spec states the promise and what observes it;
+   the request sequence, test records and cleanup are yours to settle against the real system.
+   Record them in the build log before you run them. A proof that would write real data, or that
+   needs a change to what the row promises, goes back to the caller as a question.
 6. **Write the tests the acceptance needs** (ABAP Unit for behaviour logic, where the platform can
    run it). A test that passes for an unrelated reason is worse than none.
 7. **Link and check**: find the transport (`adt_sap_transport_query`, by its number once you
