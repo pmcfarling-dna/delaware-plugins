@@ -131,10 +131,18 @@ stop.**
   `unavailable` with why, never `pass`.
 - **Journeys first.** Write the journeys of the Usage section as runnable checks before the
   code they exercise, or alongside it: for a draft-enabled record, creating, editing,
-  **discarding an unsaved draft**, activating and resuming. For a `ui5` app, a scripted
-  browser run of the real flows (create form fields, discard, an error shown, a required field
-  marked) before the first deploy. A journey that needs a second identity is listed as such,
-  not claimed.
+  **discarding an unsaved draft**, activating and resuming. For a `ui5` app, the real flows
+  (create form fields, discard, an error shown, a required field marked) are tried in the
+  browser before the first deploy: by the tests the project already has, and otherwise by
+  the person's own signed-in preview or a live browser drive that the caller arranges. Do not
+  write a standalone browser script, or install a browser driver, unless the work package
+  asks for automation itself or the caller's brief says a repeatable script is wanted; then
+  say in one sentence what it proves that the preview does not. **A scripted attempt that
+  fails gets one targeted retry, only with a named diagnosis and a concrete change; after a
+  second failure stop, record the symptom and the evidence you have, and report. Do not try a
+  third time.** Record the automated run and the person's observation as separate rows,
+  never one for the other. A journey that needs a second identity is listed as such, not
+  claimed.
 - **Fixes after a review.** Fix what the finding names, then run the legitimate-flow checks
   again and report which. Do not widen the fix beyond the finding's cause; list what you noticed
   but left.

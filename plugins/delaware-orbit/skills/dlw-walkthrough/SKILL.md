@@ -51,13 +51,18 @@ pace. If a step fails, show the message as it is and explain it in one line. A
 refusal is the method working (a guard that held), so say what it guards;
 never work round it.
 
-**Pace for a workshop.** Say the time a step usually takes and, before a long
-one (a build, a security probe, a deploy), what the developer can read or do
-meanwhile. A subagent run is given a timebox. **A background subagent's
-progress reaches you only when it finishes**, so say so at the start and keep
-runs short; when one reaches the timebox, **stop and tell the developer** what is done and what
-remains, and let them decide whether to extend it. Never let a run overrun in
-silence, and never let a clock run out as a pass.
+**Pace.** There is no deadline unless the developer volunteers one; then honour
+it. Never ask how long they have or how long a build can take, and never show a
+countdown. Before a long step (a build, a security probe, a deploy), say roughly
+how long it usually takes and what they can read or do meanwhile. Each subagent
+run still has a timebox, which is **your own safeguard against stalled or
+runaway work**, not a deadline for them: set it generously, keep runs short, and
+watch for a run that is stalled or retrying the same thing. **A background
+subagent's progress reaches you only when it finishes**, so say so at the start.
+A run that reaches its timebox while still making evident progress is extended
+once without asking; a run that is stalled, or that has stopped on the same
+cause twice, is stopped and reported with what is done and what remains. Never
+let a run overrun in silence, and never let a clock run out as a pass.
 
 ## Decisions and the scope of a yes
 
@@ -86,10 +91,11 @@ verdicts; a decision that changes what a row means updates that row in
 `ACCEPTANCE.md` in the same edit. Read decisions back in one short group at a
 step boundary, not one at a time.
 
-**At check-in, ask what they will let you absorb:** "Small fixes may come up
-while building, such as a label that is too long or a redundant cast. May the
-coder fix those and just tell you? I'll still ask about anything that changes
-who can see what, which data, where it goes, or what a test row means."
+**At check-in, state the default for small fixes rather than asking:** "Small
+fixes may come up while building, such as a label that is too long or a
+redundant cast. The coder will fix those and tell you. I'll still ask about
+anything that changes who can see what, which data, where it goes, or what a
+test row means. Say if you'd rather approve each one."
 
 | What comes up | Do |
 |---|---|
@@ -98,7 +104,7 @@ who can see what, which data, where it goes, or what a test row means."
 | The same fix, but the wording is itself an acceptance criterion (a label or message a row or scenario names) | Bring the choice back as a decision |
 | A material change to access, data, target or scope | Its own decision, every time, even if they agreed to absorb small fixes |
 
-**When you must stop** (a timebox, an expired session, a lock, a usage limit),
+**When you must stop** (a stalled run, an expired session, a lock, a usage limit),
 say three things: the last state you verified, the next operation they would
 need to authorise, and where the evidence is saved. Time spent waiting on the
 environment says nothing about how the agents performed.
@@ -120,18 +126,23 @@ To resume, read the state:
 
 ## Choose the requirement to fit the workshop (step 1)
 
-A workshop has a clock. The requirement must be small enough to finish **with
-the evidence it promises**, so size it by what proving it takes, not by how
-little code it needs.
+The requirement must be small enough to finish **with the evidence it
+promises**, so size it by what proving it takes, not by how little code it
+needs. Do not ask how long they have; agree one thin slice and let the work
+take what it takes.
 
 - **Size by the proof.** Every row the requirement promises needs a way to be
   proven in the room. Cut features, not tests: if a feature is in, its tests
   are in. A feature whose proof the room cannot do goes under Scope "Not:".
-- **Identities.** One signed-in participant can prove what one identity can
-  do. A rule that needs a second person (an acknowledgement by someone other
-  than the submitter), or a second scope (access isolation between two plants
-  or teams), needs two identities. Either arrange them before the workshop and
-  name them, or cut the rule. A row nobody can observe stays "not verified".
+- **One developer, one identity.** Assume one developer, signed in on a
+  development system. Never ask whether a second user is available. If they want
+  to test permissions they can switch roles themselves: record the identity, the
+  effective role and what they saw. A rule that needs two distinct people (an
+  acknowledgement by someone other than the submitter) or a second scope (access
+  isolation between two plants or teams) stays in the spec, its row stays
+  `NOT VERIFIED` with the reason, and the rest of the walkthrough carries on. Say
+  at delivery that the build cannot be signed off while such a row stands, unless
+  a lead signs over it.
 - **Uniqueness and concurrency.** A rule that promises "never two" needs
   concurrency evidence on the engine the deployment uses. Without it, take the
   promise out of the spec.
@@ -142,12 +153,12 @@ little code it needs.
   Flexible Programming Model or freestyle) is its own build, linked to its
   backend with `depends_on`, and it accompanies either an ABAP or a CAP
   backend. Prefer the front end the platform generates over a freestyle one.
-- **Ask how long the build can take today,** and agree one thin slice (one
-  usage scenario, one screen). The rest goes under Scope "Not:".
+- **Agree one thin slice** (one usage scenario, one screen). The rest goes
+  under Scope "Not:".
 
 **What the workshop demonstrates is not the same as what qualifies.** A build
 that showed the method may still have `not verified` rows, an unassessed
-advisory or a security review that stopped at its timebox. Say plainly, before
+advisory or a security review that stopped before it finished. Say plainly, before
 step 8, which rows are met, which are not verified and why, and that **a
 demonstration does not by itself qualify for delivery or sign-off.** Deliver and
 sign off only what the rows support. Hardening beyond the agreed scope (more
@@ -184,10 +195,16 @@ instance to get past it.
 
 ## The defaults, so developers don't collide
 
-Say these once at check-in; they hold for every step.
+These hold for every step. Apply them silently. At check-in say only the few the
+participant needs to know: their own build numbers only, every change said
+first, and no personal data in evidence. Do not recite the rest as a list, and
+never present one of them as a choice.
 
 **Both branches:**
-- **Rigour `sandbox`** for every build banked here.
+- **Rigour `sandbox`** for every build banked here, a linked front end included.
+  Set it; never ask about depth, rigour or how thorough a review should be, and
+  never mention it in the check-in card or as a proposal. Choose the applicable checks yourself. Orbit's
+  gates and the independent reviews all stay.
 - **Their own build numbers only.** Before building, reviewing or delivering,
   check with `orbit_get_build` that the build is assigned to them. If it isn't,
   stop.
@@ -228,6 +245,14 @@ One authoritative record, so the same fact is never in two tables.
   in. An agent using a person's account shows what the app did; it is not that
   person's acceptance. For a row that needs a person, check what the approved
   spec permits (see `/dlw-orbit`, Sign-off) before treating it as met.
+- **A person's verdict and an automated run are separate rows.** What a person
+  did in the app (a journey in their own signed-in preview, or a live browser
+  drive) is recorded on its own row with who operated it, what they saw and,
+  where it matters, a read-back of what was saved. An automated run is recorded
+  on its own row too. One cannot pass the other: a person who closes and reopens
+  a tab and sees the draft come back passes the journey row; a row that
+  explicitly requires an automated run stays `NOT VERIFIED` until that run
+  succeeds. Mark a person row `PASS` only once a read-back shows its trace.
 - **Reviewer reports are saved as files** named with their commit and scope.
   Each reviewer writes its own, with Write; the caller names the file and gives
   the date, and does not re-type it. A summary by anyone else is not the report.
@@ -238,24 +263,37 @@ One authoritative record, so the same fact is never in two tables.
 authorisation, so everything later is recorded against a real name. No shared
 technical user does the work.
 
+**Keep check-in short, and let the first real question be about what they want.**
+Do the pre-flight and read the facts yourself (below), then ask **"What do you
+want to build?"** (for a front end linked to a delivered backend: "What does the
+user still need to do in the app?"). Propose a default for everything else, in one
+reply they can correct, and never ask about depth or rigour, how long they have,
+a second user, or which browser-testing tool to use.
+
+**A linked front end reuses what its backend already settled:** system, package,
+prefix, transport, service, test user and the decisions in the backend's evidence.
+Read them from Orbit and the evidence folder and state them once; do not ask
+for them again. Only the front end's own facts are new: how it is hosted and
+opened, and where its source lives (propose a folder).
+
 - **Pre-flight, two minutes, before anything else:**
   - `/mcp` shows `delaware-mcp` connected; if it asks to be authorised, the
     developer does it now (a session cannot). Then one `kb_list_sources` call
     answers.
-  - **Permission posture for SAP writes.** Say: "Claude Code can block an SAP
-    write that a helper agent makes even after you approved it here, because
-    your approval in this conversation is not the helper's own permission.
-    Either allow the specific write tools this walkthrough uses for this
-    session, which you set yourself in Claude Code's permission settings, or
-    run outside automatic mode and approve each prompt." Record the choice in
-    `decisions.md` once it exists. Never widen permissions yourself or ask for
-    a blanket allow. If a helper's write is blocked, stop, show the block as it
-    is, and let the developer decide; do not route round it.
-  - **How the result will be opened.** The people who will use it need an
-    address or a way to open it (a launchpad address, a preview). Ask for it
-    now, so the early check and the sign-off rows are not stuck later.
-  - **Say once:** don't open or reload editor windows while a phase runs; a
-    restart ends a running helper.
+  - **Permission posture for SAP writes: raise it at step 5, before the first
+    helper write, not at check-in.** Say: "Claude Code can block an SAP write that
+    a helper agent makes even after you approved it here, because your approval in
+    this conversation is not the helper's own permission. Either allow the specific
+    write tools this walkthrough uses for this session, which you set yourself in
+    Claude Code's permission settings, or run outside automatic mode and approve
+    each prompt." Record the choice in `decisions.md`. Never widen permissions
+    yourself or ask for a blanket allow. If a helper's write is blocked, stop, show
+    the block as it is, and let the developer decide; do not route round it. A
+    blocked read at check-in is the same thing: report it, do not route round it.
+  - **How the result will be opened** is asked in step 1, with the requirement,
+    not here.
+  - **Editor windows:** say once, at step 5 before the first phase, not to open
+    or reload editor windows while a phase runs; a restart ends a running helper.
 - **Read first:** `delaware_guide` with name `dlw-orbit`. It is the procedure
   steps 2, 3, 4 and 8 follow.
 - **Orbit:** `orbit_config`. Show the systems, workstreams and development
@@ -298,12 +336,16 @@ technical user does the work.
     and name the one target (space) and repository the build uses.
 - **Both branches:** create the evidence folder (said aloud first) with the
   empty `ACCEPTANCE.md`, `INDEX.md` and `decisions.md`.
-- **Ask what they will let you absorb** (see "Decisions and the scope of a
-  yes"), and record the answer in `decisions.md`.
+- **Small fixes:** propose the default, "the coder fixes small cosmetic things and
+  tells you; anything touching access, data, target or a test row's meaning
+  comes back to you", and record it in `decisions.md`. Ask only if they object.
 
-Read back a check-in card (who Orbit and the platform say they are, the target,
-the package or repository, rigour `sandbox`, the evidence folder, what they
-will let you absorb) and the four points of the method. Wait.
+Read back a short check-in card, five lines at most (who Orbit and the platform
+say they are, the target, the package or repository, the evidence folder, how
+small fixes are handled) and the four points of the method, then ask the
+question above. Propose the prefix, package and folder as defaults inside the
+card; do not turn them into separate questions. The card has no rigour line and
+says nothing about depth, time or a second user, for a linked front end too. Wait.
 
 ## Step 1: the requirement
 
@@ -312,17 +354,26 @@ Everything after this is judged against the requirement.
 
 - **They bring one:** ask them to describe it as their business would, with
   who asks for it and why. Don't redesign it yet.
+- **A front end linked to a delivered backend:** do not re-ask the business
+  case. Read the backend's usage scenarios and open questions, and ask only what
+  the user still needs to do in the app, who opens it and how. Propose the app
+  from what the backend already offers.
 - **They don't have one:** read `references/samples.md` and offer its samples by
   their one-line titles. Read out the chosen one's requirement, as the business
   user said it, and nothing of the guide's notes below it. Nothing is banked
   until their own intake banks it. If none suits, propose one grounded in
   something you find on the system during this step, never from memory.
-- **Size it to the workshop** (the section above): name what each promised row
-  needs to be proven, and cut what the room cannot prove.
+- **Size it by the proof** (the section above): name what each promised row
+  needs to be proven, and cut what cannot be proven in the session.
 - **Ask how the people who need it will open it,** in their words: a tile, a
   transaction, a link, a report in a tool they already use. Ask whether they
   have a working example of something like it today. Write the answer down and
-  give it to the spec writer, so the spec starts the journey at that door.
+  give it to the spec writer, so the spec starts the journey at that door. If
+  the answer is a launchpad tile, say once that on an on-premise launchpad a tile
+  shows only for a user whose role carries its catalog (SAP_ALL does not make it
+  appear), that this adds role work, and offer the alternative: open the app from
+  its preview or direct address and keep the tile under Scope "Not:". Let them
+  choose.
 - **Say where it is kept:** in delaware's Orbit on this landscape, where others
   on it can read it. Keep anything confidential out.
 - **CAP branch:** now check the prerequisites the chosen design needs.
@@ -388,6 +439,12 @@ reviewer** reads what it allows.
   thin slice and about 10 to 15 acceptance rows; what does not fit goes under
   Scope "Not:" or comes back to the developer as a choice. Cut features, never
   the proof of a feature that stays. Say how many rows and words the draft has.
+- **Write browser-journey rows around the business outcome.** Tell the writer to
+  state a front-end row as what the user does and sees ("closes the tab, reopens
+  the app, the unsaved plan is back"), with a `person` row for it, and not as
+  "an automated browser run passes". A row names automation only when the
+  requester asked for automation itself or the project already requires it; then
+  it is its own row.
 - **A fix is a patch, not a rewrite.** After each revision show the lines that
   changed (a diff of the two versions), not the whole spec again.
 - **The spec reviewer saves its own report.** Name the file (with the spec
@@ -498,8 +555,11 @@ built as written, it asks for a spec revision instead of improvising.
 - **Files are written with Write and Edit.** Say it in every coder brief: source, tests, configuration
   and logs are authored with those tools, never piped through the shell with a heredoc or `echo`; the
   shell runs things. On Windows especially, quoting in a shell write fails silently.
-- **Bounded runs.** Give each run a scope, a timebox and a stop condition. At
-  the timebox it stops and says what remains.
+- **Before the first helper write, say two things once:** the permission
+  posture (step 0 gives the wording) and not to open or reload editor windows
+  while a phase runs.
+- **Bounded runs.** Give each run a scope, a generous internal timebox and a
+  stop condition (see "Pace"). At the timebox it stops and says what remains.
 - **One phase at a time, with a fresh coder for each.** Brief each from the
   approved plan, the build log and the latest review, not by resuming one long
   transcript: that costs more, and the state is lost if a session dies. A phase
@@ -524,8 +584,27 @@ built as written, it asks for a spec revision instead of improvising.
 - **Journeys before code.** The journeys of the spec are written as runnable
   checks before or alongside the code they exercise (for a draft-enabled record,
   including discarding an unsaved draft), and a database rule is proven on the
-  engine the deployment uses. A front end gets a scripted browser run of the
-  real flows before its first deploy.
+  engine the deployment uses.
+- **The real journey is the browser check.** As soon as one meaningful workflow
+  is usable, open it from the participant's intended entry point (the tile, the
+  link, the preview) and try it: for the quarry app, open the tile, edit an
+  allocation, see the overage and release a valid plan. Start with the
+  participant's own signed-in preview, or a live browser drive if one is
+  available. Record who operated it, what they saw and, where it matters, a simple
+  read-back of what was saved. **Do not, by default, write a standalone browser
+  script, install a browser driver or send the participant through repeated
+  sign-ins just to demonstrate a journey,** and never ask them to choose a
+  browser-testing framework. Tests the project already requires, and
+  automated coverage it already has, stay: run them with the project's own setup
+  first. Add a repeatable script only when it proves something the preview cannot,
+  and say in one sentence what evidence it adds.
+- **A scripted attempt that fails is capped.** One targeted retry, and only with
+  a specific diagnosis and a concrete change to test. After a second failure stop
+  the loop, record the symptom and carry on with the evidence you have. Bring it
+  to the developer only if the gap blocks an outcome they asked for. Write this
+  cap into the coder's brief, so the coder stops at it, not you after the fact.
+  The person-operated journey and the automated run keep their own rows (see "The
+  acceptance record").
 - **What the developer does by hand.** Say these up front, not when they block:
   - ABAP: objects the `adt_sap_*` tools can't create (on 2026-11-10 that
     included every BAdI implementation), which the developer creates in ADT or
@@ -567,7 +646,7 @@ attacks what the work package allows.
   the depth the change warrants (`/dlw-orbit`, Security review). An ABAP build
   has no probe review: its security coverage stays the design review from
   step 2, and you say so. Each reviewer is given
-  the build number, the commit and a timebox, and saves its report as a file
+  the build number, the commit and a generous internal timebox, and saves its report as a file
   with the commit and scope in the name. Neither writes.
 - **The named agents, or stop.** This step runs only through those agents. If
   this client can't start them by name (no subagents, or only a general-purpose
@@ -641,10 +720,14 @@ waivers before delivery, the retrospective and security notes before sign-off.
   say yes. If there is no tile yet, they can try a Fiori elements back end in the
   binding preview (step 5); say which identity opened it. For each person row, say who operated the client and which identity
   was signed in, and check what the approved spec permits. A row that needs an
-  identity nobody had is not observed: it is `fail` with a reason that starts
-  "not verified", and the build is reopened (or a lead signs off over it with a
-  reason); never a quiet pass. At `sandbox` one statement may confirm the
-  `person` rows, but only when every one of them is observed and passes.
+  identity nobody had (two distinct people, a role they did not switch to) is not
+  observed: it is `fail` with a reason that starts "not verified", and the build is
+  reopened (or a lead signs off over it with a reason); never a quiet pass. Say
+  that plainly and go on with the rows that are observed. At `sandbox` one
+  statement may confirm the `person` rows, but only when every one of them is
+  observed and passes. Judge each row on its own evidence: the person's journey
+  in the app can pass while a row that requires an automated run stays
+  `NOT VERIFIED`.
 - **Show:** the delivery as claimed beside the platform's answer now.
 
 Wait.
@@ -656,6 +739,9 @@ requirement: a grounded spec with its journeys, reviewed twice and by a
 security reviewer, the platform's proof, a recorded sign-off or a recorded
 "not yet, and why".
 
+- Name what stayed `NOT VERIFIED` and why (a second person, a role they did not
+  switch to, an automated run that stopped after its retry), and keep what a
+  person saw apart from what a script showed.
 - `orbit_get_build`: summarise the spec, the objects and transport or commit,
   the review verdicts, the security findings and what was not checked, the
   platform's answer and the sign-off, and point at where each of the four points
