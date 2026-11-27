@@ -318,6 +318,17 @@ opened, and where its source lives (propose a folder).
     the index is off (common on sandbox systems), say once: "code search is off
     on this system, so I'll use where-used and the repository search"; it is not
     an error. The writer and reviewer then list what they could not search.
+  - **Zenith, which step 7 needs.** Check that `delaware-mcp` offers the
+    `zenith_*` tools (search for them if your client loads tools on demand),
+    then call `zenith_my_objects`; no objects is a good answer. If the tools
+    are missing or the call is refused, say so now, showing any refusal as it
+    is: without Zenith, step 7 cannot check their code and it stays "not
+    checked". They ask whoever manages their delaware access to give them
+    Zenith (their product role, and a user record in the platform's BTP
+    subaccount), then sign in to `delaware-mcp` again through `/mcp`, start a
+    new session and run check-in or resume again. They may go on without it if
+    they say so; record that in `decisions.md`. Make this check on a resume too,
+    before picking up.
   - **Prefix:** propose one from their initials (e.g. `ZJD_`) and check it is
     free with `adt_sap_repository_search`, wildcards on both sides.
   - **Package:** propose a name with their prefix (e.g. `ZJD_HACK`). If
