@@ -51,6 +51,11 @@ only after an explicit yes.
 (`orbit_get_build`), never from a local file. A stale local copy silently undoes decisions the
 requester has already approved.
 
+**A new round on a signed-off build:** the same spec grows. Add to Scope, Usage, Design and
+Acceptance with new ids; keep everything earlier rounds delivered, and leave unchanged rows and
+scenarios word for word (Orbit asks a reworded one again). The row guide in your assignment applies
+to what this round adds, not to the whole spec. Report any earlier behaviour the change affects.
+
 1. **Separate the record into four piles** before writing: what the requester stated; what they
    confirmed after a read-back; what was proposed and not rejected (these become "(assumed)");
    what they parked or put out of scope (these become Scope "Not:").

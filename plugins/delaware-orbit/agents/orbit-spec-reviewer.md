@@ -113,6 +113,12 @@ row and all (Scope "Not:"), and it goes to the requester as a question. Keeping 
 open finding. Raise everything you can see in the first review; a later round does not add findings
 about text that has not changed.
 
+**A new round on a signed-off build.** You are given the signed-off version and the revision.
+Review what changed and what it affects: a change that alters behaviour behind an unchanged,
+already accepted row is a finding (Orbit will not ask that row again unless it or its scenario is
+reworded). An earlier promise removed without the requester saying so is Major. The row guide
+applies to what the round adds.
+
 **Rigour shapes the bar.** At `sandbox` the spec is meant to be lighter (one thin slice, about 10
 to 15 acceptance rows). Do not hold it to a delivery-rigour bar, and report a spec that has grown
 past that as a finding with what could move to Scope "Not:". State in your report how rigour

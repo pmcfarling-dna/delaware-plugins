@@ -52,7 +52,7 @@ under its product's prefix, and each acting as the signed-in person:
 | `/dlw-orbit` or describes new work | **Intake** (below) |
 | `/dlw-orbit status PTM-R-0001` | `orbit_get_build` with `include` `["zenith","delivery"]` (the header, without the spec), then summarise: state, who has it, what's next, and Zenith's status if objects are linked |
 | `/dlw-orbit mine` or "what am I working on" | `orbit_my_work`, oldest first, with the one next action for each |
-| `/dlw-orbit revise PTM-R-0001` | `orbit_get_build`, discuss the change, then `orbit_revise_spec` with `based_on` set to the version you read. For a small change send `edits` (old and new text) instead of the whole spec; give `expected_sha256` of the result |
+| `/dlw-orbit revise PTM-R-0001` | `orbit_get_build`, discuss the change, then `orbit_revise_spec` with `based_on` set to the version you read. For a small change send `edits` (old and new text) instead of the whole spec; give `expected_sha256` of the result. On a signed-off build this is **A new round** (below) |
 | `/dlw-orbit deliver PTM-R-0001` | **Delivery** (below) |
 | `/dlw-orbit sign-off PTM-R-0001` | **Sign-off** (below) |
 
@@ -332,6 +332,33 @@ Keep the spec short and specific. Don't write code in it.
 - **Record the security design review** on the build with `orbit_add_note`
   once it has a number (see Security review below).
 
+## A new round (a signed-off development needs more)
+
+**One development keeps one number and one spec.** A shortage report signed off
+for production orders that now needs maintenance orders is the same build, not a
+new one. Before opening a build, search for it (`orbit_list_builds` with
+`text`); if a signed-off build already is this development, propose a new round.
+A different development that merely uses it is a new build.
+
+1. Read the current spec (`orbit_get_build`) and change **that text**: widen
+   Scope, add scenarios and acceptance rows with new ids, and edit the Design
+   where the round changes it. Keep what earlier rounds delivered in the spec,
+   and leave unchanged rows and scenarios word for word: reworded ones are asked
+   again. Never renumber a row or a scenario.
+2. If your client runs subagents, review the change, not the whole spec: give
+   `orbit-spec-reviewer` the previous version and the new one, including what
+   the change does to behaviour earlier rounds accepted.
+3. Show the changes and ask who signs this round off, if not the person asking.
+   Only after an explicit yes, call `orbit_revise_spec` with `new_round: true`,
+   the reason (what the round is for), `edits`, and `requester` if named.
+4. From there it is an ordinary build: approve, take, deliver (this round's own
+   transport, or repository and commit), sign off. Earlier rounds stay in
+   `earlierRounds`. Rows in `carriedRows` were accepted before and are unchanged:
+   show them and do not ask again. Every tool row runs again.
+
+`orbit_cancel` on an open round drops only that round and restores the
+signed-off build. Say so before calling it.
+
 ## Delivery (the developer's agent)
 
 If your client runs subagents, `orbit-coder` builds and `orbit-code-reviewer`
@@ -516,7 +543,9 @@ the note that it was the developer's own pass, not an independent one.
    evidence, rows `unavailable` and why, any `warnings`, Zenith's answer
    then, and any waivers with who gave them and why) beside Zenith's answer
    now.
-4. **Person rows:** `personRowsToConfirm` lists them.
+4. **Person rows:** `personRowsToConfirm` lists them. On a second or later
+   round, `carriedRows` are not in it: show them with the round that accepted
+   them; ask again only if the requester wants to.
    - At `delivery` rigour, ask the requester about **each row separately**,
      naming its scenario, and pass each answer in `checks` as `pass` or
      `fail`. Orbit refuses the sign-off (`person-rows-unconfirmed`) until
